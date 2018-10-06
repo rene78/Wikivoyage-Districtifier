@@ -1,4 +1,37 @@
 var itemCounter = 2;
+
+var wikidataIds = {
+  "T1" : [],
+  "T2" : [],
+  "T3" : [],
+  "T4":[],
+  "T5":[],
+  "T6":[],
+  "T7":[],
+  "T8":[],
+  "T9":[],
+  "T10":[],
+  "T11":[]
+}
+
+/*
+var wikidataIds = [
+  T1 = ["äffle","pferdle"],
+  T2 = [],
+  T3 = [],
+  T4=[],
+  T5=[],
+  T6=[],
+  T7=[],
+  T8=[],
+  T9=[],
+  T10=[],
+  T11=[],
+  T12=[]
+];
+*/
+//T2, T3, T4, T5, T6, T7, T8, T9, T10, T11;
+
 var distrGeoJson =
 {
   "type": "FeatureCollection",
@@ -189,7 +222,7 @@ var distrGeoJson =
   ]
 }
 
-var stdColors = {color1:"#ac5c91", color2:"#d5dc76", color3:"#b5d29f", color4:"#b383b3", color5:"#71b37b", color6:"#8a84a3", color7:"#d09440", color8:"#578e86", color9:"#d56d76", color10:"#4f93c0", color11:"#69999f"};
+var stdColors = {T1:"#ac5c91", T2:"#d5dc76", T3:"#b5d29f", T4:"#b383b3", T5:"#71b37b", T6:"#8a84a3", T7:"#d09440", T8:"#578e86", T9:"#d56d76", T10:"#4f93c0", T11:"#69999f"};
 
 addMapwithGeoJson(distrGeoJson);
 
@@ -298,7 +331,7 @@ function addMapwithGeoJson (distrGeoJson) {
         layer.setStyle({fillColor: undefined});
       }
 
-
+      assignWikidata(feature.properties.wikidata)
 /*
       //console.log("Wikidata ID: " +feature.properties.wikidata);
 */
@@ -326,48 +359,67 @@ function definePolygonColor(feature) {
   var color;
   switch (selected) {
     case 1:
-      color = stdColors.color1;
+      color = stdColors.T1;
       return color;
       break;
     case 2:
-      color = stdColors.color2;
+      color = stdColors.T2;
       return color;
       break;
     case 3:
-      color = stdColors.color3;
+      color = stdColors.T3;
       return color;
       break;
     case 4:
-      color = stdColors.color4;
+      color = stdColors.T4;
       return color;
       break;
     case 5:
-      color = stdColors.color5;
+      color = stdColors.T5;
       return color;
       break;
     case 6:
-      color = stdColors.color6;
+      color = stdColors.T6;
       return color;
       break;
     case 7:
-      color = stdColors.color7;
+      color = stdColors.T7;
       return color;
       break;
     case 8:
-      color = stdColors.color8;
+      color = stdColors.T8;
       return color;
       break;
     case 9:
-      color = stdColors.color9;
+      color = stdColors.T9;
       return color;
       break;
     case 10:
-      color = stdColors.color10;
+      color = stdColors.T10;
       return color;
       break;
     case 11:
-      color = stdColors.color11;
+      color = stdColors.T11;
       return color;
       break;
   }
+}
+
+function assignWikidata(wikidataId) {
+  var selected = whatsSelected();
+  var variable = "T"+selected;
+
+  for(var key in wikidataIds) {
+    //console.log(key);
+    if(key === variable) {
+      //console.log("Gefunden!");
+      wikidataIds[key].push(wikidataId);
+    }
+  }
+
+  console.log(wikidataIds.T1[0]);
+  console.log(wikidataIds);
+  //console.log(wikidataIds.indexOf("T1"));
+
+  //console.log("Das ist die Wikidata ID: "+wikidataId);
 }
