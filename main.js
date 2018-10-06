@@ -189,6 +189,8 @@ var distrGeoJson =
   ]
 }
 
+var stdColors = {color1:"#ac5c91", color2:"#d5dc76", color3:"#b5d29f", color4:"#b383b3", color5:"#71b37b", color6:"#8a84a3", color7:"#d09440", color8:"#578e86", color9:"#d56d76", color10:"#4f93c0", color11:"#69999f"};
+
 addMapwithGeoJson(distrGeoJson);
 
 function addDistrict() {
@@ -200,7 +202,7 @@ function addDistrict() {
   itemCounter++;
   //console.log(itemCounter);
   //console.log("Distrikt Nr. " + itemCounter + " hinzugefügt!");
-  var item = '<div id="item_'+itemCounter+'" class="item"><div class=checkmark><input type="radio" name="selected" checked="checked"></div><div class=title>District '+itemCounter+'</div><div class=delete onclick="removeDistrict(this)"><img src="img/dustbin.png" alt="Delete"</div></div>';
+  var item = '<div id="item_'+itemCounter+'" class="item"><div class=checkmark><input type="radio" name="selected"></div><div class=title>District '+itemCounter+'</div><div class=delete onclick="removeDistrict(this)"><img src="img/dustbin.png" alt="Delete"</div></div>';
   var d1 = document.getElementById('content');
   d1.insertAdjacentHTML('beforeend', item);
 
@@ -254,9 +256,9 @@ function addMapwithGeoJson (distrGeoJson) {
     onEachFeature: onEachFeature,
     //Color the Leaflet map similar to the GeoJSON
     style: function(feature) {
-      color = feature.properties.fill; 
-      console.log(color);
-      return {"fillColor": color, "opacity": 1, "fillOpacity": 0.7, "color": "#555555", "weight": 2};
+      //color = feature.properties.fill; 
+      //console.log(color);
+      return {"fillColor": undefined, "opacity": 1, "fillOpacity": 0.7, "color": "#555555", "weight": 2};
     }
     
   })
@@ -270,11 +272,102 @@ function addMapwithGeoJson (distrGeoJson) {
     //bind click
     layer.on('click', function (e) {
       //e=event
-      console.log(e);
+      //console.log(e);
       //console.log(feature.properties.title);
       //console.log("Anzahl der Koordinaten: " +feature.geometry.coordinates[0].length);
       //console.log("Hier sind die Koordinaten gespeichert: " +feature.geometry.coordinates[0][0][0]);
       //createMapmask(feature);
+      //console.log(layer);
+      //console.log(layer.options.fillColor);
+      //var check=layer.options.fillColor === definePolygonColor(feature);
+      //console.log(check);
+
+      /*Check, if the polygon already has a color defined.
+      If no OR
+      If current color is a different one than the one, which is supposed to be applied:
+      --> Color the polygon according to the selected district.
+      Else if (i.e. color already defined): Remove the color again. Behaves like on/off toggle
+      */
+
+      if (typeof layer.options.fillColor == "undefined" ||layer.options.fillColor != definePolygonColor(feature)) {
+        //console.log("undefined!");
+        var polygonColor = definePolygonColor(feature);
+        layer.setStyle({fillColor: polygonColor});
+        //console.log("Defined color: " +polygonColor);
+      } else {
+        layer.setStyle({fillColor: undefined});
+      }
+
+
+/*
+      //console.log("Wikidata ID: " +feature.properties.wikidata);
+*/
+      
     });
+  }
+}
+
+function whatsSelected() {
+  //Find out which radio button is selected
+  var radios = document.getElementsByName("selected");
+  for (var i = 0; i < radios.length; i++) {
+    if (radios[i].checked) {
+      //console.log(i + 1 + " is selected!")
+      return i+1;
+    }
+  }
+}
+
+function definePolygonColor(feature) {
+  //Find out which radio button is selected
+  var selected = whatsSelected();
+  //console.log(selected + " is selected!");
+  //console.log(feature.properties.wikidata);
+  var color;
+  switch (selected) {
+    case 1:
+      color = stdColors.color1;
+      return color;
+      break;
+    case 2:
+      color = stdColors.color2;
+      return color;
+      break;
+    case 3:
+      color = stdColors.color3;
+      return color;
+      break;
+    case 4:
+      color = stdColors.color4;
+      return color;
+      break;
+    case 5:
+      color = stdColors.color5;
+      return color;
+      break;
+    case 6:
+      color = stdColors.color6;
+      return color;
+      break;
+    case 7:
+      color = stdColors.color7;
+      return color;
+      break;
+    case 8:
+      color = stdColors.color8;
+      return color;
+      break;
+    case 9:
+      color = stdColors.color9;
+      return color;
+      break;
+    case 10:
+      color = stdColors.color10;
+      return color;
+      break;
+    case 11:
+      color = stdColors.color11;
+      return color;
+      break;
   }
 }
