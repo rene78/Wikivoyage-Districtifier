@@ -102,6 +102,10 @@
   background-color: #69999f;
 }
 
+.delete img {
+  width: 50px;
+}
+
 /*The 3 items below have been entered to center the text vertically
 (https://stackoverflow.com/a/45599428/5263954)*/
 #map, .checkmark, .title, .delete, #add-district {
