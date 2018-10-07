@@ -8,17 +8,18 @@
 </head>
 <body>
   <h1>Wikivoyage Districtifier</h1>
+  <input type="button" value="Farbe von Polygon entfernen!" onclick="removeColor()">
   <div id="content">
     <div id="add-district" onclick="addDistrict()">Add district</div>
     <div id="map">Map</div>
-    <div id="item_1" class="item">
+    <div id="item_0" class="item">
       <div class=checkmark><input type="radio" name="selected" checked="checked"></div>
-      <div class=title>District 1</div>
+      <div class=title>District 0</div>
       <div class=delete onclick="removeDistrict(this)"><img src="img/dustbin.png" alt="Delete"></div>
     </div>
-    <div id="item_2" class="item">
+    <div id="item_1" class="item">
       <div class=checkmark><input type="radio" name="selected"></div>
-      <div class=title>District 2</div>
+      <div class=title>District 1</div>
       <div class=delete onclick="removeDistrict(this)"><img src="img/dustbin.png" alt="Delete"></div>
     </div>
   </div>

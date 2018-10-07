@@ -12,6 +12,7 @@
   margin: 0 auto;
   grid-template-areas:
     "map add-district"  
+    "map item_0"
     "map item_1"
     "map item_2"
     "map item_3"
@@ -21,11 +22,10 @@
     "map item_7"
     "map item_8"
     "map item_9"
-    "map item_10"
-    "map item_11";
+    "map item_10";
 }
 
-#item_1, #item_2, #item_3, #item_4, #item_5, #item_6, #item_7, #item_8, #item_9, #item_10, #item_11 {
+#item_0, #item_1, #item_2, #item_3, #item_4, #item_5, #item_6, #item_7, #item_8, #item_9, #item_10 {
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
   grid-template-areas:
@@ -58,47 +58,47 @@
   cursor: pointer;
 }
 
-#item_1 .title{
+#item_0 .title{
   background-color: #ac5c91;
 }
 
-#item_2 .title{
+#item_1 .title{
   background-color: #d5dc76;
 }
 
-#item_3 .title{
+#item_2 .title{
   background-color: #b5d29f;
 }
 
-#item_4 .title{
+#item_3 .title{
   background-color: #b383b3;
 }
 
-#item_5 .title{
+#item_4 .title{
   background-color: #71b37b;
 }
 
-#item_6 .title{
+#item_5 .title{
   background-color: #8a84a3;
 }
 
-#item_7 .title{
+#item_6 .title{
   background-color: #d09440;
 }
 
-#item_8 .title{
+#item_7 .title{
   background-color: #578e86;
 }
 
-#item_9 .title{
+#item_8 .title{
   background-color: #d56d76;
 }
 
-#item_10 .title{
+#item_9 .title{
   background-color: #4f93c0;
 }
 
-#item_11 .title{
+#item_10 .title{
   background-color: #69999f;
 }
 

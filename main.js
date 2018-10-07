@@ -1,36 +1,10 @@
-var itemCounter = 2;
+var itemCounter = 1;
 
-var wikidataIds = {
-  "T1" : [],
-  "T2" : [],
-  "T3" : [],
-  "T4":[],
-  "T5":[],
-  "T6":[],
-  "T7":[],
-  "T8":[],
-  "T9":[],
-  "T10":[],
-  "T11":[]
+//Create array with subarrays to save all Wikidata ID's
+var wikidataIds = new Array(11);
+for (i=0; i<wikidataIds.length; i++) {
+  wikidataIds[i]=new Array;
 }
-
-/*
-var wikidataIds = [
-  T1 = ["äffle","pferdle"],
-  T2 = [],
-  T3 = [],
-  T4=[],
-  T5=[],
-  T6=[],
-  T7=[],
-  T8=[],
-  T9=[],
-  T10=[],
-  T11=[],
-  T12=[]
-];
-*/
-//T2, T3, T4, T5, T6, T7, T8, T9, T10, T11;
 
 var distrGeoJson =
 {
@@ -224,11 +198,83 @@ var distrGeoJson =
 
 var stdColors = {T1:"#ac5c91", T2:"#d5dc76", T3:"#b5d29f", T4:"#b383b3", T5:"#71b37b", T6:"#8a84a3", T7:"#d09440", T8:"#578e86", T9:"#d56d76", T10:"#4f93c0", T11:"#69999f"};
 
-addMapwithGeoJson(distrGeoJson);
+//Add a Leaflet map to the page
+var mymap = L.map('map').setView([0, 0], 11);
+
+L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+maxZoom: 18
+}).addTo(mymap);
+
+var jsonLayer = L.geoJSON(distrGeoJson, {
+  onEachFeature: onEachFeature,
+  style: style
+})
+
+//Apply standard colors to the polygons (all object or "features" are forwarded to this function)
+function style() {
+  //color = feature.properties.fill; 
+  //console.log(color);
+  return {"fillColor": undefined, "opacity": 1, "fillOpacity": 0.7, "color": "#555555", "weight": 2};
+}
+//Color polygon according to selected district
+function onEachFeature(feature, layer) {
+  //bind click
+  layer.on('click', function (e) {
+    //e=event
+    //console.log(e);
+    //console.log(feature.properties.title);
+    //console.log("Anzahl der Koordinaten: " +feature.geometry.coordinates[0].length);
+    //console.log("Hier sind die Koordinaten gespeichert: " +feature.geometry.coordinates[0][0][0]);
+    //createMapmask(feature);
+    //console.log(layer);
+    //console.log(layer.options.fillColor);
+    //var check=layer.options.fillColor === definePolygonColor(feature);
+    //console.log(check);
+
+    /*Check, if the polygon already has a color defined.
+    If no OR
+    If current color is a different one than the one, which is supposed to be applied:
+    --> Color the polygon according to the selected district.
+    Else if (i.e. color already defined): Remove the color again. Behaves like on/off toggle
+    */
+
+    if (typeof layer.options.fillColor == "undefined" ||layer.options.fillColor != definePolygonColor()) {
+      //console.log("undefined!");
+      var polygonColor = definePolygonColor();
+      layer.setStyle({fillColor: polygonColor});
+      //console.log("Defined color: " +polygonColor);
+    } else {
+      layer.setStyle({fillColor: undefined});
+    }
+
+    assignWikidata(feature.properties.wikidata)
+/*
+    console.log("Wikidata ID: " +feature.properties.wikidata);
+*/
+    
+  });
+}
+
+//Add the JSON layer to the map
+jsonLayer.addTo(mymap);
+
+//Center and zoom the map on the provided GeoJSON
+mymap.fitBounds(jsonLayer.getBounds());
+
+//Remove colors from polygons, whose districts have been deleted
+function removeColor() {
+  jsonLayer.eachLayer(function (layer) {
+    //console.log(layer.feature.properties.wikidata);
+    if(layer.feature.properties.wikidata == 'Q11249') {    
+      layer.setStyle({fillColor: undefined}) 
+    }
+  });
+}
 
 function addDistrict() {
   //Stop execution, if 11 districts have already been added
-  if (itemCounter >= 11) {
+  if (itemCounter >= 10) {
     alert("No more than 11 districts, please!");
     return;
   }
@@ -236,8 +282,8 @@ function addDistrict() {
   //console.log(itemCounter);
   //console.log("Distrikt Nr. " + itemCounter + " hinzugefügt!");
   var item = '<div id="item_'+itemCounter+'" class="item"><div class=checkmark><input type="radio" name="selected"></div><div class=title>District '+itemCounter+'</div><div class=delete onclick="removeDistrict(this)"><img src="img/dustbin.png" alt="Delete"</div></div>';
-  var d1 = document.getElementById('content');
-  d1.insertAdjacentHTML('beforeend', item);
+  var content = document.getElementById('content');
+  content.insertAdjacentHTML('beforeend', item);
 
   /*More complicated, but possibly more robust way to create the nodes:
   var item = document.createElement("DIV");
@@ -263,80 +309,20 @@ function addDistrict() {
   */
 }
 
-function removeDistrict(number) {
-  var itemToDelete = number.parentNode;
+function removeDistrict(dustbin) {
+  var itemToDelete = dustbin.parentNode;
   //console.log(itemToDelete);
   itemToDelete.remove();
   itemCounter--;
   //console.log(itemCounter);
-  //rename id's
+
+  //alle wikidata ids von gelöschtem distrikt an removeColor() schicken
+  //removeColor();
+
+  //change counter on id's, so they are consecutively numbered
   var allItems = document.getElementsByClassName("item");
   for (var i=0; i<allItems.length; i++) {
-    allItems[i].setAttribute("id","item_" + (i+1));
-  }
-}
-
-function addMapwithGeoJson (distrGeoJson) {
-  //Add a Leaflet map to the page
-  var mymap = L.map('map').setView([0, 0], 11);
-
-  L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-  maxZoom: 18
-  }).addTo(mymap);
-
-  var jsonLayer = L.geoJSON(distrGeoJson, {
-    onEachFeature: onEachFeature,
-    //Color the Leaflet map similar to the GeoJSON
-    style: function(feature) {
-      //color = feature.properties.fill; 
-      //console.log(color);
-      return {"fillColor": undefined, "opacity": 1, "fillOpacity": 0.7, "color": "#555555", "weight": 2};
-    }
-    
-  })
-  //Add the JSON layer to the map
-  jsonLayer.addTo(mymap);
-  //Center and zoom the map on the provided GeoJSON
-  mymap.fitBounds(jsonLayer.getBounds());
-
-  //Start the conversion to a mapmask, if a feature (e.g. a district) is clicked.
-  function onEachFeature(feature, layer) {
-    //bind click
-    layer.on('click', function (e) {
-      //e=event
-      //console.log(e);
-      //console.log(feature.properties.title);
-      //console.log("Anzahl der Koordinaten: " +feature.geometry.coordinates[0].length);
-      //console.log("Hier sind die Koordinaten gespeichert: " +feature.geometry.coordinates[0][0][0]);
-      //createMapmask(feature);
-      //console.log(layer);
-      //console.log(layer.options.fillColor);
-      //var check=layer.options.fillColor === definePolygonColor(feature);
-      //console.log(check);
-
-      /*Check, if the polygon already has a color defined.
-      If no OR
-      If current color is a different one than the one, which is supposed to be applied:
-      --> Color the polygon according to the selected district.
-      Else if (i.e. color already defined): Remove the color again. Behaves like on/off toggle
-      */
-
-      if (typeof layer.options.fillColor == "undefined" ||layer.options.fillColor != definePolygonColor(feature)) {
-        //console.log("undefined!");
-        var polygonColor = definePolygonColor(feature);
-        layer.setStyle({fillColor: polygonColor});
-        //console.log("Defined color: " +polygonColor);
-      } else {
-        layer.setStyle({fillColor: undefined});
-      }
-
-      assignWikidata(feature.properties.wikidata)
-/*
-      //console.log("Wikidata ID: " +feature.properties.wikidata);
-*/
-      
-    });
+    allItems[i].setAttribute("id","item_" + (i));
   }
 }
 
@@ -345,60 +331,60 @@ function whatsSelected() {
   var radios = document.getElementsByName("selected");
   for (var i = 0; i < radios.length; i++) {
     if (radios[i].checked) {
-      //console.log(i + 1 + " is selected!")
-      return i+1;
+      //console.log(i + " is selected!")
+      return i;
     }
   }
 }
 
-function definePolygonColor(feature) {
+function definePolygonColor() {
   //Find out which radio button is selected
   var selected = whatsSelected();
   //console.log(selected + " is selected!");
   //console.log(feature.properties.wikidata);
   var color;
   switch (selected) {
-    case 1:
+    case 0:
       color = stdColors.T1;
       return color;
       break;
-    case 2:
+    case 1:
       color = stdColors.T2;
       return color;
       break;
-    case 3:
+    case 2:
       color = stdColors.T3;
       return color;
       break;
-    case 4:
+    case 3:
       color = stdColors.T4;
       return color;
       break;
-    case 5:
+    case 4:
       color = stdColors.T5;
       return color;
       break;
-    case 6:
+    case 5:
       color = stdColors.T6;
       return color;
       break;
-    case 7:
+    case 6:
       color = stdColors.T7;
       return color;
       break;
-    case 8:
+    case 7:
       color = stdColors.T8;
       return color;
       break;
-    case 9:
+    case 8:
       color = stdColors.T9;
       return color;
       break;
-    case 10:
+    case 9:
       color = stdColors.T10;
       return color;
       break;
-    case 11:
+    case 10:
       color = stdColors.T11;
       return color;
       break;
@@ -407,6 +393,11 @@ function definePolygonColor(feature) {
 
 function assignWikidata(wikidataId) {
   var selected = whatsSelected();
+  console.log(selected);
+  console.log(wikidataIds.length);
+  wikidataIds[selected].push(wikidataId);
+
+  /*
   var variable = "T"+selected;
 
   for(var key in wikidataIds) {
@@ -416,10 +407,13 @@ function assignWikidata(wikidataId) {
       wikidataIds[key].push(wikidataId);
     }
   }
+*/
 
-  console.log(wikidataIds.T1[0]);
   console.log(wikidataIds);
   //console.log(wikidataIds.indexOf("T1"));
 
   //console.log("Das ist die Wikidata ID: "+wikidataId);
 }
+
+
+
