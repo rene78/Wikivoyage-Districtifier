@@ -8,10 +8,9 @@
 </head>
 <body>
   <h1>Wikivoyage Districtifier</h1>
-  <input type="button" value="Farbe von Polygon entfernen!" onclick="removeColor()">
   <div id="content">
     <div id="add-district" onclick="addDistrict()">Add district</div>
-    <div id="map">Map</div>
+    <div id="map"></div>
     <div id="item_0" class="item">
       <div class=checkmark><input type="radio" name="selected" checked="checked"></div>
       <div class=title>District 0</div>
@@ -31,6 +30,7 @@
   <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
   crossorigin=""></script>
+  <script src="exampleGeoJSON.js"></script>
   <script src="main.js"></script>
 </body>
 </html>

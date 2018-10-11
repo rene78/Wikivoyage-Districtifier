@@ -6,197 +6,7 @@ for (i=0; i<wikidataIds.length; i++) {
   wikidataIds[i]=new Array;
 }
 
-var distrGeoJson =
-{
-  "type": "FeatureCollection",
-  "generator": "overpass-ide",
-  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
-  "timestamp": "2018-10-06T13:50:02Z",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "relation/8398087",
-        "admin_level": "10",
-        "boundary": "administrative",
-        "name": "Columbus Circle",
-        "place": "neighbourhood",
-        "type": "boundary",
-        "wikidata": "Q109968"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -73.9834034,
-              40.7710864
-            ],
-            [
-              -73.9843181,
-              40.7698412
-            ],
-            [
-              -73.9847606,
-              40.7692277
-            ],
-            [
-              -73.9857128,
-              40.7679195
-            ],
-            [
-              -73.9828759,
-              40.7667118
-            ],
-            [
-              -73.9800319,
-              40.7655204
-            ],
-            [
-              -73.9790744,
-              40.7668754
-            ],
-            [
-              -73.9811759,
-              40.7677692
-            ],
-            [
-              -73.9813569,
-              40.767953
-            ],
-            [
-              -73.9815554,
-              40.7685208
-            ],
-            [
-              -73.9805737,
-              40.7699103
-            ],
-            [
-              -73.9834034,
-              40.7710864
-            ]
-          ]
-        ]
-      },
-      "id": "relation/8398087"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "relation/8398090",
-        "admin_level": "10",
-        "boundary": "administrative",
-        "name": "Midtown",
-        "place": "neighbourhood",
-        "type": "boundary",
-        "wikidata": "Q11249"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -73.9865711,
-              40.7616564
-            ],
-            [
-              -73.9808822,
-              40.7592733
-            ],
-            [
-              -73.9841142,
-              40.7548421
-            ],
-            [
-              -73.9808875,
-              40.7534788
-            ],
-            [
-              -73.9730126,
-              40.7642791
-            ],
-            [
-              -73.9790744,
-              40.7668754
-            ],
-            [
-              -73.9800319,
-              40.7655204
-            ],
-            [
-              -73.9828759,
-              40.7667118
-            ],
-            [
-              -73.9865711,
-              40.7616564
-            ]
-          ]
-        ]
-      },
-      "id": "relation/8398090"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/158858760",
-        "@relations": [
-          {
-            "role": "label",
-            "rel": 8398090,
-            "reltags": {
-              "admin_level": "10",
-              "boundary": "administrative",
-              "name": "Midtown",
-              "place": "neighbourhood",
-              "type": "boundary",
-              "wikidata": "Q11249"
-            }
-          }
-        ]
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -73.9795443,
-          40.7622684
-        ]
-      },
-      "id": "node/158858760"
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "@id": "node/5706568329",
-        "@relations": [
-          {
-            "role": "label",
-            "rel": 8398087,
-            "reltags": {
-              "admin_level": "10",
-              "boundary": "administrative",
-              "name": "Columbus Circle",
-              "place": "neighbourhood",
-              "type": "boundary",
-              "wikidata": "Q109968"
-            }
-          }
-        ]
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -73.9831782,
-          40.7683868
-        ]
-      },
-      "id": "node/5706568329"
-    }
-  ]
-}
-
-var stdColors = {T1:"#ac5c91", T2:"#d5dc76", T3:"#b5d29f", T4:"#b383b3", T5:"#71b37b", T6:"#8a84a3", T7:"#d09440", T8:"#578e86", T9:"#d56d76", T10:"#4f93c0", T11:"#69999f"};
+var stdColors = ["#ac5c91", "#d5dc76", "#b5d29f", "#b383b3", "#71b37b", "#8a84a3", "#d09440", "#578e86", "#d56d76", "#4f93c0", "#69999f"];
 
 //Add a Leaflet map to the page
 var mymap = L.map('map').setView([0, 0], 11);
@@ -211,7 +21,7 @@ var jsonLayer = L.geoJSON(distrGeoJson, {
   style: style
 })
 
-//Apply standard colors to the polygons (all object or "features" are forwarded to this function)
+//Apply standard colors to the polygons (all objects or "features" are forwarded to this function)
 function style() {
   //color = feature.properties.fill; 
   //console.log(color);
@@ -239,20 +49,24 @@ function onEachFeature(feature, layer) {
     Else if (i.e. color already defined): Remove the color again. Behaves like on/off toggle
     */
 
-    if (typeof layer.options.fillColor == "undefined" ||layer.options.fillColor != definePolygonColor()) {
-      //console.log("undefined!");
-      var polygonColor = definePolygonColor();
+    var polygonColor;
+    if (typeof layer.options.fillColor == "undefined") {
+      //Case: No color defined for this district yet
+      polygonColor = stdColors[whatsSelected()];
       layer.setStyle({fillColor: polygonColor});
-      //console.log("Defined color: " +polygonColor);
-    } else {
+      addToWikidataArray(feature.properties.wikidata);
+    } else if (layer.options.fillColor != stdColors[whatsSelected()]) {
+      //Case: Current fill color is different than selected color
+      updateWikidataArray(layer.options.fillColor, feature.properties.wikidata);
+      polygonColor = stdColors[whatsSelected()];
+      layer.setStyle({fillColor: polygonColor});
+    }  else {
+      //Case: Current fill color = Selected color
       layer.setStyle({fillColor: undefined});
+      removeFromWikidataArray(feature.properties.wikidata);
     }
 
-    assignWikidata(feature.properties.wikidata)
-/*
-    console.log("Wikidata ID: " +feature.properties.wikidata);
-*/
-    
+    //console.log("Wikidata ID: " +feature.properties.wikidata);
   });
 }
 
@@ -263,11 +77,16 @@ jsonLayer.addTo(mymap);
 mymap.fitBounds(jsonLayer.getBounds());
 
 //Remove colors from polygons, whose districts have been deleted
-function removeColor() {
+function removeColor(ids) {
+  console.log(ids.length);
+  //For each layer (i.e. polygon) the code below is executed.
   jsonLayer.eachLayer(function (layer) {
     //console.log(layer.feature.properties.wikidata);
-    if(layer.feature.properties.wikidata == 'Q11249') {    
-      layer.setStyle({fillColor: undefined}) 
+    for (var i=0; i<ids.length; i++) {
+      if(layer.feature.properties.wikidata == ids[i]) {
+        console.log(ids[i]);
+        layer.setStyle({fillColor: undefined}) 
+      }
     }
   });
 }
@@ -311,13 +130,23 @@ function addDistrict() {
 
 function removeDistrict(dustbin) {
   var itemToDelete = dustbin.parentNode;
-  //console.log(itemToDelete);
+  //Find out at which position "itemToDelete" is in order to know the array number of which to remove the subarray entries.
+  var items = document.getElementsByClassName("item");
+  for (i=0;i<items.length;i++) {
+    //console.log(items[i]);
+    if (items[i] == itemToDelete) {
+      //console.log(i);
+      removeColor(wikidataIds[i]); //remove the color of all polygons from the soon to be deleted district
+      //console.log(wikidataIds[i]);
+      wikidataIds[i].splice(0,wikidataIds[i].length); //from position 0 remove all items of this subarray
+      //console.log(wikidataIds);
+      break;
+    }
+  }
+
   itemToDelete.remove();
   itemCounter--;
   //console.log(itemCounter);
-
-  //alle wikidata ids von gelöschtem distrikt an removeColor() schicken
-  //removeColor();
 
   //change counter on id's, so they are consecutively numbered
   var allItems = document.getElementsByClassName("item");
@@ -337,83 +166,37 @@ function whatsSelected() {
   }
 }
 
-function definePolygonColor() {
-  //Find out which radio button is selected
+function addToWikidataArray(wikidataId) {
   var selected = whatsSelected();
-  //console.log(selected + " is selected!");
-  //console.log(feature.properties.wikidata);
-  var color;
-  switch (selected) {
-    case 0:
-      color = stdColors.T1;
-      return color;
-      break;
-    case 1:
-      color = stdColors.T2;
-      return color;
-      break;
-    case 2:
-      color = stdColors.T3;
-      return color;
-      break;
-    case 3:
-      color = stdColors.T4;
-      return color;
-      break;
-    case 4:
-      color = stdColors.T5;
-      return color;
-      break;
-    case 5:
-      color = stdColors.T6;
-      return color;
-      break;
-    case 6:
-      color = stdColors.T7;
-      return color;
-      break;
-    case 7:
-      color = stdColors.T8;
-      return color;
-      break;
-    case 8:
-      color = stdColors.T9;
-      return color;
-      break;
-    case 9:
-      color = stdColors.T10;
-      return color;
-      break;
-    case 10:
-      color = stdColors.T11;
-      return color;
-      break;
-  }
-}
-
-function assignWikidata(wikidataId) {
-  var selected = whatsSelected();
-  console.log(selected);
-  console.log(wikidataIds.length);
+  //console.log(selected);
+  //console.log(wikidataIds.length);
+  //console.log("Das ist die Wikidata ID: "+wikidataId);
   wikidataIds[selected].push(wikidataId);
 
-  /*
-  var variable = "T"+selected;
-
-  for(var key in wikidataIds) {
-    //console.log(key);
-    if(key === variable) {
-      //console.log("Gefunden!");
-      wikidataIds[key].push(wikidataId);
-    }
-  }
-*/
-
   console.log(wikidataIds);
-  //console.log(wikidataIds.indexOf("T1"));
-
-  //console.log("Das ist die Wikidata ID: "+wikidataId);
 }
 
+function updateWikidataArray(previousColor, wikidataId) {
+  var selected = whatsSelected();
+  //Find out which district number is previousColor
+  var i = stdColors.indexOf(previousColor);
+  //console.log("The previous color is at array position: " +i);
+  //Find the Wikdata ID in the subarray
+  var j = wikidataIds[i].indexOf(wikidataId);
+  //console.log("The Wikidata ID to be removed is at subarray position: " +j);
+  //Remove the Wikidata ID from subarray
+  wikidataIds[i].splice(j,1); //at position j remove 1 item
+  //Add the Wikidata ID to the newly selected district
+  wikidataIds[selected].push(wikidataId);
+  console.log(wikidataIds);
+}
 
-
+function removeFromWikidataArray(wikidataId) {
+  var selected = whatsSelected();
+  console.log(wikidataId);
+  //Find the Wikdata ID in the subarray
+  var j = wikidataIds[selected].indexOf(wikidataId);
+  //Remove the Wikidata ID from subarray
+  wikidataIds[selected].splice(j,1);
+  console.log(wikidataIds);
+}
