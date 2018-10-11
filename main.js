@@ -78,19 +78,20 @@ mymap.fitBounds(jsonLayer.getBounds());
 
 //Remove colors from polygons, whose districts have been deleted
 function removeColor(ids) {
-  console.log(ids.length);
+  //console.log(ids.length);
   //For each layer (i.e. polygon) the code below is executed.
   jsonLayer.eachLayer(function (layer) {
     //console.log(layer.feature.properties.wikidata);
     for (var i=0; i<ids.length; i++) {
       if(layer.feature.properties.wikidata == ids[i]) {
-        console.log(ids[i]);
+        //console.log(ids[i]);
         layer.setStyle({fillColor: undefined}) 
       }
     }
   });
 }
 
+//Add a new district to the table
 function addDistrict() {
   //Stop execution, if 11 districts have already been added
   if (itemCounter >= 10) {
@@ -128,6 +129,7 @@ function addDistrict() {
   */
 }
 
+//Remove district from table & delete all Wikidata elements from the corresponding subarray & remove color from selected polygons
 function removeDistrict(dustbin) {
   var itemToDelete = dustbin.parentNode;
   //Find out at which position "itemToDelete" is in order to know the array number of which to remove the subarray entries.
@@ -138,8 +140,10 @@ function removeDistrict(dustbin) {
       //console.log(i);
       removeColor(wikidataIds[i]); //remove the color of all polygons from the soon to be deleted district
       //console.log(wikidataIds[i]);
+      //wikidataIds.splice(i,1);
+      //wikidataIds.push([]);
       wikidataIds[i].splice(0,wikidataIds[i].length); //from position 0 remove all items of this subarray
-      //console.log(wikidataIds);
+      console.log(wikidataIds);
       break;
     }
   }
@@ -153,8 +157,11 @@ function removeDistrict(dustbin) {
   for (var i=0; i<allItems.length; i++) {
     allItems[i].setAttribute("id","item_" + (i));
   }
+
+  createOutput();
 }
 
+//Return number of currently selected district radio button
 function whatsSelected() {
   //Find out which radio button is selected
   var radios = document.getElementsByName("selected");
@@ -166,16 +173,18 @@ function whatsSelected() {
   }
 }
 
+//If Wikidata ID for certain polygon is ADDED (i.e. no color defined before): Add Wikidata ID to corresponding subarray
 function addToWikidataArray(wikidataId) {
   var selected = whatsSelected();
   //console.log(selected);
   //console.log(wikidataIds.length);
   //console.log("Das ist die Wikidata ID: "+wikidataId);
   wikidataIds[selected].push(wikidataId);
-
-  console.log(wikidataIds);
+  //console.log(wikidataIds);
+  createOutput();
 }
 
+//If Wikidata ID for certain polygon is REPLACED: Delete Wikidata ID from old subarray and add it to new one
 function updateWikidataArray(previousColor, wikidataId) {
   var selected = whatsSelected();
   //Find out which district number is previousColor
@@ -189,8 +198,10 @@ function updateWikidataArray(previousColor, wikidataId) {
   //Add the Wikidata ID to the newly selected district
   wikidataIds[selected].push(wikidataId);
   console.log(wikidataIds);
+  createOutput();
 }
 
+//If Wikidata ID for certain polygon is REMOVED (i.e. clicked again): Delete Wikidata ID from corresponding subarray
 function removeFromWikidataArray(wikidataId) {
   var selected = whatsSelected();
   console.log(wikidataId);
@@ -199,4 +210,28 @@ function removeFromWikidataArray(wikidataId) {
   //Remove the Wikidata ID from subarray
   wikidataIds[selected].splice(j,1);
   console.log(wikidataIds);
+  createOutput();
+}
+
+//Create Mapframe and Mapshapes for Wikivoyage
+function createOutput() {
+  //Create mapshapes
+  var mapshape="{{Mapframe|width=500|height=500|group=map1}}\r\n";
+  var titles = document.getElementsByClassName("title");
+  //console.log(titles);
+  //console.log(wikidataIds.length)
+  var wikidataId;
+  var fill;
+  var title;
+
+  for (var i = 0; i < wikidataIds.length; i++) {
+    if (wikidataIds[i].length !=0) {
+      wikidataId=wikidataIds[i];
+      fill = stdColors[i];
+      title = titles[i].innerHTML;
+
+      mapshape += "{{Mapshape|type=geoshape|wikidata=" + wikidataId + "|group=map1|fill=" + fill + "|title=" + title + "}}\r\n";
+    }
+  }
+  document.getElementById("textareabox").innerHTML = mapshape;
 }

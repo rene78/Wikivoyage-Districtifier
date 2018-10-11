@@ -19,10 +19,10 @@
     "map item_4"
     "map item_5"
     "map item_6"
-    "map item_7"
-    "map item_8"
-    "map item_9"
-    "map item_10";
+    "output-text-area item_7"
+    "output-text-area item_8"
+    "output-text-area item_9"
+    "output-text-area item_10";
 }
 
 #item_0, #item_1, #item_2, #item_3, #item_4, #item_5, #item_6, #item_7, #item_8, #item_9, #item_10 {
@@ -57,6 +57,11 @@
   background-color: orange;
   cursor: pointer;
 }
+
+#output-text-area {
+  grid-area: output-text-area;
+}
+
 
 #item_0 .title{
   background-color: #ac5c91;
