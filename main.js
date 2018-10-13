@@ -76,7 +76,7 @@ jsonLayer.addTo(mymap);
 //Center and zoom the map on the provided GeoJSON
 mymap.fitBounds(jsonLayer.getBounds());
 
-//Remove colors from polygons, whose districts have been deleted
+//Remove colors from polygons, whose districts have been deleted.
 function removeColor(ids) {
   //console.log(ids.length);
   //For each layer (i.e. polygon) the code below is executed.
@@ -85,7 +85,22 @@ function removeColor(ids) {
     for (var i=0; i<ids.length; i++) {
       if(layer.feature.properties.wikidata == ids[i]) {
         //console.log(ids[i]);
-        layer.setStyle({fillColor: undefined}) 
+        layer.setStyle({fillColor: undefined})
+      }
+    }
+  });
+}
+
+//Color all districts polygons below the deleted one with a color 1 number above the current one (e.g. instead of std color 4 change to 3)
+function oneColorUp(startAt) {
+  jsonLayer.eachLayer(function (layer) {
+    for (i=startAt; i<wikidataIds.length; i++) {
+      if (wikidataIds[i].length != 0) {
+        for (j=0; j<wikidataIds[i].length; j++) {
+          if(layer.feature.properties.wikidata == wikidataIds[i][j]) {
+            layer.setStyle({fillColor: stdColors[i]})
+          }
+        }
       }
     }
   });
@@ -140,9 +155,10 @@ function removeDistrict(dustbin) {
       //console.log(i);
       removeColor(wikidataIds[i]); //remove the color of all polygons from the soon to be deleted district
       //console.log(wikidataIds[i]);
-      //wikidataIds.splice(i,1);
-      //wikidataIds.push([]);
-      wikidataIds[i].splice(0,wikidataIds[i].length); //from position 0 remove all items of this subarray
+      wikidataIds.splice(i,1);
+      wikidataIds.push([]);
+      //wikidataIds[i].splice(0,wikidataIds[i].length); //from position 0 remove all items of this subarray
+      oneColorUp(i); //Color all districts below the deleted one with a color one above the current one.
       console.log(wikidataIds);
       break;
     }
