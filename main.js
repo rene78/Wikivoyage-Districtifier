@@ -115,8 +115,7 @@ function addDistrict() {
   }
   itemCounter++;
   //console.log(itemCounter);
-  //console.log("Distrikt Nr. " + itemCounter + " hinzugefügt!");
-  var item = '<div id="item_'+itemCounter+'" class="item"><div class=checkmark><input type="radio" name="selected"></div><div class=title>District '+itemCounter+'</div><div class=delete onclick="removeDistrict(this)"><img src="img/dustbin.png" alt="Delete"</div></div>';
+  var item = '<div id="item_'+itemCounter+'" class="item"><div class=checkmark><input type="radio" name="selected"></div><div class=title><input type="text" class="dname" value="District  '+itemCounter+'"></div><div class=delete onclick="removeDistrict(this)"><img src="img/dustbin.png" alt="Delete"</div></div>';
   var content = document.getElementById('content');
   content.insertAdjacentHTML('beforeend', item);
 
@@ -233,7 +232,7 @@ function removeFromWikidataArray(wikidataId) {
 function createOutput() {
   //Create mapshapes
   var mapshape="{{Mapframe|width=500|height=500|group=map1}}\r\n";
-  var titles = document.getElementsByClassName("title");
+  var titles = document.getElementsByClassName("dname");
   //console.log(titles);
   //console.log(wikidataIds.length)
   var wikidataId;
@@ -243,8 +242,9 @@ function createOutput() {
   for (var i = 0; i < wikidataIds.length; i++) {
     if (wikidataIds[i].length !=0) {
       wikidataId=wikidataIds[i];
-      fill = stdColors[i];
-      title = titles[i].innerHTML;
+      fill = "{{StdColor|T"+(i+1)+"}}"; //Use StdColor syntax of Wikivoyage
+      //fill = stdColors[i];
+      title = titles[i].value;
 
       mapshape += "{{Mapshape|type=geoshape|wikidata=" + wikidataId + "|group=map1|fill=" + fill + "|title=" + title + "}}\r\n";
     }
