@@ -12,16 +12,24 @@
     <div id="add-district" onclick="addDistrict()">Add district</div>
     <div id="map"></div>
     <div id="item_0" class="item">
-      <div class=checkmark><input type="radio" name="selected" checked="checked"></div>
-      <div class=title><input type="text" class="dname" value="District 0"></div>
-      <div class=delete onclick="removeDistrict(this)"><img src="img/dustbin.png" alt="Delete"></div>
+      <div class=checkmark><input type="radio" name="selected" checked="checked">
+        <span class="tooltiptext">Activate district to add/remove polygons</span>
+      </div>
+      <div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District 0"></div>
+      <div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete">
+        <span class="tooltiptext">Click to delete district</span>
+      </div>
     </div>
     <div id="item_1" class="item">
-      <div class=checkmark><input type="radio" name="selected"></div>
-      <div class=title><input type="text" class="dname" value="District 1"></div>
-      <div class=delete onclick="removeDistrict(this)"><img src="img/dustbin.png" alt="Delete"></div>
+      <div class=checkmark><input type="radio" name="selected">
+        <span class="tooltiptext">Activate district to add/remove polygons</span>
+      </div>
+      <div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District 1"></div>
+      <div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete">
+        <span class="tooltiptext">Click to delete district</span>
+      </div>
     </div>
-    <div id="output-text-area"><textarea id="textareabox" cols="100" rows="10" readonly>Test123</textarea></div>
+    <div id="output-text-area"><textarea id="textareabox" placeholder="The Wikivoyage code will show up here once you added some elements to a district." readonly></textarea></div>
   </div>
 
   <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
