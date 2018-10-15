@@ -7,8 +7,8 @@
 #content {
   display: grid;
   grid-template-columns: 3fr 1fr;
-  grid-auto-rows: minmax(50px, auto);
-  grid-gap: 10px;
+  grid-auto-rows: 50px;
+  grid-gap: 2px;
   margin: 0 auto;
   grid-template-areas:
     "map add-district"  
@@ -19,8 +19,8 @@
     "map item_4"
     "map item_5"
     "map item_6"
-    "output-text-area item_7"
-    "output-text-area item_8"
+    "map item_7"
+    "map item_8"
     "output-text-area item_9"
     "output-text-area item_10";
 }
@@ -38,23 +38,40 @@
 }
 
 #map {
+  position: relative;
   grid-area: map;
+  z-index: 1;
 }
 .checkmark {
+  position: relative;
   grid-area: checkmark;
 }
 .title {
+  position: relative;
   grid-area: title;
 }
 
 .delete {
+  position: relative;
   grid-area: delete;
   cursor: pointer;
 }
 
+.dname {
+  width: 100%;
+  background-color: inherit;
+  border-style: none;
+  text-align: center;
+}
+
+.dname:hover {
+  background-color: whitesmoke;
+  border-style: inset;
+  border-width: 3px;
+}
+
 #add-district {
   grid-area: add-district;
-  background-color: orange;
   cursor: pointer;
 }
 
@@ -62,53 +79,60 @@
   grid-area: output-text-area;
 }
 
+#textareabox {
+  height: 87px;
+  width: calc(100% - 5px);
+  padding: 2px;
+  border: none;
+}
 
-#item_0 .title{
+#item_0 {
   background-color: #ac5c91;
 }
 
-#item_1 .title{
+#item_1 {
   background-color: #d5dc76;
 }
 
-#item_2 .title{
+#item_2 {
   background-color: #b5d29f;
 }
 
-#item_3 .title{
+#item_3 {
   background-color: #b383b3;
 }
 
-#item_4 .title{
+#item_4 {
   background-color: #71b37b;
 }
 
-#item_5 .title{
+#item_5 {
   background-color: #8a84a3;
 }
 
-#item_6 .title{
+#item_6 {
   background-color: #d09440;
 }
 
-#item_7 .title{
+#item_7 {
   background-color: #578e86;
 }
 
-#item_8 .title{
+#item_8 {
   background-color: #d56d76;
 }
 
-#item_9 .title{
+#item_9 {
   background-color: #4f93c0;
 }
 
-#item_10 .title{
+#item_10 {
   background-color: #69999f;
 }
 
 .delete img {
-  width: 50px;
+  height: 40px;
+  width: auto;
 }
 
 /*The 3 items below have been entered to center the text vertically
@@ -117,4 +141,28 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 2;
+  top: -5px;
+  right: 105%;
+}
+
+.delete:hover .tooltiptext{
+  visibility: visible;
+}
+
+.checkmark:hover .tooltiptext{
+  visibility: visible;
 }
