@@ -9,8 +9,6 @@
 <body>
   <h1>Wikivoyage Districtifier</h1>
   <div id="content">
-    <div id="add-district" onclick="addDistrict()">Add district</div>
-    <div id="map"></div>
     <div id="item_0" class="item">
       <div class=checkmark><input type="radio" name="selected" checked="checked">
         <span class="tooltiptext">Activate district to add/remove polygons</span>
@@ -29,6 +27,10 @@
         <span class="tooltiptext">Click to delete district</span>
       </div>
     </div>
+    <div id="add-district" onclick="addDistrict()"><img src="img/Add.svg" alt="Add">
+      <span class="tooltiptext">Click to add a new district</span>
+    </div>
+    <div id="map"></div>
     <div id="output-text-area"><textarea id="textareabox" placeholder="The Wikivoyage code will show up here once you added some elements to a district." readonly></textarea></div>
   </div>
 
