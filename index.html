@@ -8,6 +8,11 @@
 </head>
 <body>
   <h1>Wikivoyage Districtifier</h1>
+  <details>
+    <summary>Input</summary>
+    <textarea id="inputGeoJson" cols="110" rows="30" placeholder="Please paste your GeoJSON code from overpass turbo here" autofocus></textarea> <br>
+    <input type="button" value="Load GeoJSON" onclick="checkInput()" />
+  </details>
   <div id="content">
     <div id="item_0" class="item">
       <div class=checkmark><input type="radio" name="selected" checked="checked">
