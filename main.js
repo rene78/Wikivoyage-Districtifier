@@ -1,80 +1,115 @@
 var itemCounter = 1;
+var stdColors = ["#ac5c91", "#d5dc76", "#b5d29f", "#b383b3", "#71b37b", "#8a84a3", "#d09440", "#578e86", "#d56d76", "#4f93c0", "#69999f"];
+var jsonLayer;
+var wikidataIds;
+
+//On first load create empty array for Wikidata ID's and set up map with Berlin example GeoJSON
+createWikidataIds();
+addLeafletMap(exampleGeoJson);
+
+//Check input from input text area
+function checkInput() {
+  purge();
+  var input = document.getElementById("inputGeoJson").value;
+  addLeafletMap(JSON.parse(input));
+}
+
+//Purge website, when new GeoJSON is loaded:
+//1. Remove old leafleat map
+//2. Reset Wikidata ID's array
+//3. Empty output text area
+function purge() {
+  //Replace current map container ("map") with an empty one. Else Leaflet error "container already initialized", when 2nd map is loaded.
+  var newdiv = document.createElement("div");
+  newdiv.setAttribute("id", "map");
+  var oldDiv = document.getElementById("map");
+  var parent = document.getElementById("content");
+  parent.replaceChild(newdiv,oldDiv);
+  //Purge the content of map div element.
+  document.getElementById("map").innerHTML="";
+  //Reset Wikidata ID's array
+  createWikidataIds();
+  //Empty output textareabox
+  document.getElementById("textareabox").innerHTML="";
+}
 
 //Create array with subarrays to save all Wikidata ID's
-var wikidataIds = new Array(11);
-for (i=0; i<wikidataIds.length; i++) {
-  wikidataIds[i]=new Array;
+function createWikidataIds() {
+  wikidataIds = new Array(11);
+  for (i=0; i<wikidataIds.length; i++) {
+    wikidataIds[i]=new Array;
+  }
 }
-
-var stdColors = ["#ac5c91", "#d5dc76", "#b5d29f", "#b383b3", "#71b37b", "#8a84a3", "#d09440", "#578e86", "#d56d76", "#4f93c0", "#69999f"];
 
 //Add a Leaflet map to the page
-var mymap = L.map('map').setView([0, 0], 11);
+function addLeafletMap(inputGeoJson) {
+  var mymap = L.map('map').setView([0, 0], 11);
 
-L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-maxZoom: 18
-}).addTo(mymap);
+  L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+  maxZoom: 18
+  }).addTo(mymap);
 
-var jsonLayer = L.geoJSON(distrGeoJson, {
-  onEachFeature: onEachFeature,
-  style: style
-})
+  jsonLayer = L.geoJSON(inputGeoJson, {
+    onEachFeature: onEachFeature,
+    style: style
+  })
 
-//Apply standard colors to the polygons (all objects or "features" are forwarded to this function)
-function style() {
-  //color = feature.properties.fill; 
-  //console.log(color);
-  return {"fillColor": undefined, "opacity": 1, "fillOpacity": 0.7, "color": "#555555", "weight": 2};
+  //Apply standard colors to the polygons (all objects or "features" are forwarded to this function)
+  function style() {
+    //color = feature.properties.fill; 
+    //console.log(color);
+    return {"fillColor": undefined, "opacity": 1, "fillOpacity": 0.7, "color": "#555555", "weight": 2};
+  }
+  //Color polygon according to selected district
+  function onEachFeature(feature, layer) {
+    //bind click
+    layer.on('click', function (e) {
+      //e=event
+      //console.log(e);
+      //console.log(feature.properties.title);
+      //console.log("Anzahl der Koordinaten: " +feature.geometry.coordinates[0].length);
+      //console.log("Hier sind die Koordinaten gespeichert: " +feature.geometry.coordinates[0][0][0]);
+      //createMapmask(feature);
+      //console.log(layer);
+      //console.log(layer.options.fillColor);
+      //var check=layer.options.fillColor === definePolygonColor(feature);
+      //console.log(check);
+
+      /*Check, if the polygon already has a color defined.
+      If no OR
+      If current color is a different one than the one, which is supposed to be applied:
+      --> Color the polygon according to the selected district.
+      Else if (i.e. color already defined): Remove the color again. Behaves like on/off toggle
+      */
+
+      var polygonColor;
+      if (typeof layer.options.fillColor == "undefined") {
+        //Case: No color defined for this district yet
+        polygonColor = stdColors[whatsSelected()];
+        layer.setStyle({fillColor: polygonColor});
+        addToWikidataArray(feature.properties.wikidata);
+      } else if (layer.options.fillColor != stdColors[whatsSelected()]) {
+        //Case: Current fill color is different than selected color
+        updateWikidataArray(layer.options.fillColor, feature.properties.wikidata);
+        polygonColor = stdColors[whatsSelected()];
+        layer.setStyle({fillColor: polygonColor});
+      }  else {
+        //Case: Current fill color = Selected color
+        layer.setStyle({fillColor: undefined});
+        removeFromWikidataArray(feature.properties.wikidata);
+      }
+
+      //console.log("Wikidata ID: " +feature.properties.wikidata);
+    });
+  }
+
+  //Add the JSON layer to the map
+  jsonLayer.addTo(mymap);
+
+  //Center and zoom the map on the provided GeoJSON
+  mymap.fitBounds(jsonLayer.getBounds());
 }
-//Color polygon according to selected district
-function onEachFeature(feature, layer) {
-  //bind click
-  layer.on('click', function (e) {
-    //e=event
-    //console.log(e);
-    //console.log(feature.properties.title);
-    //console.log("Anzahl der Koordinaten: " +feature.geometry.coordinates[0].length);
-    //console.log("Hier sind die Koordinaten gespeichert: " +feature.geometry.coordinates[0][0][0]);
-    //createMapmask(feature);
-    //console.log(layer);
-    //console.log(layer.options.fillColor);
-    //var check=layer.options.fillColor === definePolygonColor(feature);
-    //console.log(check);
-
-    /*Check, if the polygon already has a color defined.
-    If no OR
-    If current color is a different one than the one, which is supposed to be applied:
-    --> Color the polygon according to the selected district.
-    Else if (i.e. color already defined): Remove the color again. Behaves like on/off toggle
-    */
-
-    var polygonColor;
-    if (typeof layer.options.fillColor == "undefined") {
-      //Case: No color defined for this district yet
-      polygonColor = stdColors[whatsSelected()];
-      layer.setStyle({fillColor: polygonColor});
-      addToWikidataArray(feature.properties.wikidata);
-    } else if (layer.options.fillColor != stdColors[whatsSelected()]) {
-      //Case: Current fill color is different than selected color
-      updateWikidataArray(layer.options.fillColor, feature.properties.wikidata);
-      polygonColor = stdColors[whatsSelected()];
-      layer.setStyle({fillColor: polygonColor});
-    }  else {
-      //Case: Current fill color = Selected color
-      layer.setStyle({fillColor: undefined});
-      removeFromWikidataArray(feature.properties.wikidata);
-    }
-
-    //console.log("Wikidata ID: " +feature.properties.wikidata);
-  });
-}
-
-//Add the JSON layer to the map
-jsonLayer.addTo(mymap);
-
-//Center and zoom the map on the provided GeoJSON
-mymap.fitBounds(jsonLayer.getBounds());
 
 //Remove colors from polygons, whose districts have been deleted.
 function removeColor(ids) {
