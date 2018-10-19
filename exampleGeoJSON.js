@@ -1,4 +1,4 @@
-var distrGeoJson =
+var exampleGeoJson =
 {
   "type": "FeatureCollection",
   "generator": "overpass-ide",
