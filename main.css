@@ -2,7 +2,32 @@ body {
   background-color: linen;
 }
 
-@media (min-width: 500px){
+/*Navigation menu*/
+ul.topnav {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+ul.topnav li {float: left;}
+
+ul.topnav li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+ul.topnav li a:hover:not(.active) {background-color: #111;}
+
+ul.topnav li a.active {background-color: #4CAF50;}
+
+ul.topnav li.right {float: right;}
+
+@media (min-width: 600px){
   #content {
     display: grid;
     grid-template-columns: 3fr 1fr;
@@ -19,14 +44,14 @@ body {
   #output-text-area {
     grid-column: 1;
     grid-row: 11 / 13;
-    /* grid-area: output-text-area; */
   }
 }
 
-@media (max-width: 500px){
-  #map {
-    height: 500px;
-  }
+@media (max-width: 600px){
+  #map {height: 600px;}
+  ul.topnav li.right,
+  ul.topnav li {float: none;}
+  h1 {text-align: center;}
 }
 
 #map {
@@ -42,7 +67,6 @@ body {
 }
 
 #content > * {
-  /* background: whitesmoke; */
   padding: 5px;
 }
 
@@ -77,11 +101,10 @@ body {
 
 #add-district {
   position: relative;
-  /* grid-area: add-district; */
   cursor: pointer;
 }
 
-#textareabox {
+textarea {
   height: 87px;
   width: calc(100% - 5px);
   padding: 2px;
@@ -144,6 +167,14 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/*Style the query code for overpass turbo*/
+code {
+  background-color: #eee;
+  border: 1px solid #999;
+  display: block;
+  padding: 10px;
 }
 
 .tooltiptext {

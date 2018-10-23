@@ -2,17 +2,25 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width">
   <title>Wikivoyage Districtifier</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="Shortcut Icon" href="img/favicon.ico">
 </head>
 <body>
-  <h1>Wikivoyage Districtifier</h1>
+
+  <ul class="topnav">
+    <li><a class="active" href="https://rene78.github.io/Wikivoyage-Districtifier/">Wikivoyage Districtifier</a></li>
+    <li><a href="https://rene78.github.io/mapmask-geojson-converter/">Mapmask ↔ GeoJSON Converter</a></li>
+    <li><a href="https://rene78.github.io/Wikidata-Extractor/">Wikidata-Extractor</a></li>
+  </ul>
+
+  <br>
   <details>
     <summary>Input</summary>
-    <textarea id="inputGeoJson" cols="110" rows="30" placeholder="Please paste your GeoJSON code from overpass turbo here" autofocus></textarea> <br>
-    <input type="button" value="Load GeoJSON" onclick="checkInput()" />
+    <textarea id="inputGeoJson" placeholder="Please paste your GeoJSON code from overpass turbo here and click on 'Load GeoJSON'." autofocus></textarea> <br>
+    <input type="button" value="Load GeoJSON" onclick="checkInput()"/>
   </details>
+  <br>
   <div id="content">
     <div id="item_0" class="item">
       <div class=checkmark><input type="radio" name="selected" checked="checked">
@@ -38,8 +46,40 @@
     <div id="map"></div>
     <div id="output-text-area"><textarea id="textareabox" placeholder="The Wikivoyage code will show up here once you added some elements to a district." readonly></textarea></div>
   </div>
+  <details>
+    <summary>Help</summary>
+    <h3>Introduction</h3>
+    <p>This tool aims to empower editors of Wikivoyage to intuitively create district overview maps (e.g. for <a href="https://en.wikivoyage.org/wiki/Berlin#/map/0">Berlin</a>).</p>
+    <h3>Video</h3>
+    <p style="color: red">Hier Link zu Video einfügen</p>
+    <h3>Workflow</h3>
+    <ol>
+      <li><strong>Query</strong> all needed <strong>district polygons</strong> with help of <a href="http://overpass-turbo.eu/">Overpass Turbo</a>. See below for a best practice.</li>
+      <li><strong>Paste</strong> them into this tool an click on <strong>Load</strong>.</li>
+      <li><strong>Add and name districts</strong> on the right hand side and <strong>add polygons to them</strong> by selecting elements on the map.</li>
+      <li>Once done <strong>copy code</strong> at the bottom and <strong>paste it to</strong> the appropriate <strong>Wikivoyage</strong> page.</li>
+    </ol>
+    <h3>Best practice to define a query in overpass</h3>
+    <p>The example query below will download all districts of Prague</p>
+    <code>
+      [out:json][timeout:60];<br>
+      area[admin_level=8][name="Praha"]->.search;<br>
+      (rel(area.search)[admin_level=10][wikidata=""];<br>
+      );<br>
+      out body;<br>
+      >;<br>
+      out skel qt;
+    </code>
 
-  <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <ol>
+      <li>Define <strong>JSON</strong> as the output format. Define a timeout to cancel the query after a certain amount of time (optional).</li>
+      <li><strong>Define an area, within which to search for districts</strong> This area could be a city, municipality or country. The correct name of this area as stated in the OSM relation is very important. Thus go to OSM and enter the Name into the search field. Click on the result (e.g. <a href="https://www.openstreetmap.org/relation/439840">result for Prague</a>) and <strong>copy the value of "name" into your overpass query</strong> ("Praha" in the example above). Then search for "admin_level" in the same result and copy this one as well (optional. In the example above it is "8").</li>
+      <li>In the next line we define <strong>for what to search</strong> within the city of Prague. We are looking for subdistricts. Thus by trial-and-error we have to enter an "admin_level" larger than the one defined in the search field (in the example above results will show up with "admin_level=10"). To get the right admin_level without trial-and-error check the sub-districts in OSM and copy the value of "admin_level" (e.g. <a href="https://www.openstreetmap.org/relation/428823">Vyšehrad has "admin_level=10".</a> Thus you enter "10" in your query).</li>
+      <li>Click on <strong>Run</strong>. After a while the district polygons show up on the map. Click on <strong>Export --> Copy as GeoJSON and paste it on the input text area</strong> on this website.</li>
+    </ol>
+  </details>
+
+  <link rel="stylesheet" type="text/css" media="screen" href="main.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
   crossorigin=""/>
