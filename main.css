@@ -45,6 +45,19 @@ ul.topnav li.right {float: right;}
     grid-column: 1;
     grid-row: 11 / 13;
   }
+
+  /*Only show tooltips on large screens. Else there is an ugly black bar on the left hand side*/
+  .delete:hover .tooltiptext{
+    visibility: visible;
+  }
+  
+  .checkmark:hover .tooltiptext{
+    visibility: visible;
+  }
+  
+  #add-district:hover .tooltiptext{
+    visibility: visible;
+  }
 }
 
 @media (max-width: 600px){
@@ -191,16 +204,4 @@ code {
   z-index: 2;
   top: -5px;
   right: 105%;
-}
-
-.delete:hover .tooltiptext{
-  visibility: visible;
-}
-
-.checkmark:hover .tooltiptext{
-  visibility: visible;
-}
-
-#add-district:hover .tooltiptext{
-  visibility: visible;
 }
