@@ -43,7 +43,14 @@
     <div id="add-district" onclick="addDistrict()"><img src="img/Add.svg" alt="Add">
       <span class="tooltiptext">Click to add a new district</span>
     </div>
-    <div id="map"></div>
+    <!-- <div id="map"></div> old! -->
+    <div id="map-container">
+      <div id="map"></div>
+      <div id="zoom-in" class="hide">Zoom in to load boundaries</div>
+      <!-- <input type="button" value="Grey out map" onclick="greyOut()"> -->
+      <input type="button" id="load-button" title="Loads boundaries from overpass API" value="Load Boundaries" onclick="fetchExternalGeojson()">
+      <div id="loading-animation" class="hide"></div>
+    </div>
     <div id="output-text-area"><textarea id="textareabox" placeholder="The Wikivoyage code will show up here once you added some elements to a district." readonly></textarea></div>
   </div>
   <details>
@@ -90,6 +97,7 @@
   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
   crossorigin=""></script>
   <script src="exampleGeoJSON.js"></script>
+  <script src='osmtogeojson.js'></script>
   <script src="main.js"></script>
 </body>
 </html>
