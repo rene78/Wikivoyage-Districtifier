@@ -465,7 +465,7 @@ function addDistrict() {
   }
   itemCounter++;
   //console.log(itemCounter);
-  var item = '<div id="item_'+itemCounter+'" class="item"><div class=checkmark><input type="radio" name="selected" checked><span class="tooltiptext">Activate district to add/remove polygons</span></div><div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District '+itemCounter+'"></div><div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete"><span class="tooltiptext">Click to delete district</span></div></div>';
+  var item = '<div id="item_'+itemCounter+'" class="item"><div class=checkmark><input type="radio" name="selected" checked="checked" title="Activate district to add/remove polygons"></div><div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District '+itemCounter+'" title="Enter name of district"></div><div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete" title="Click to delete district"></div></div>';
   var content = document.getElementById('add-district');
   content.insertAdjacentHTML('beforebegin', item);
 

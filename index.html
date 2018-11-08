@@ -23,31 +23,20 @@
   <br>
   <div id="content">
     <div id="item_0" class="item">
-      <div class=checkmark><input type="radio" name="selected" checked="checked">
-        <span class="tooltiptext">Activate district to add/remove polygons</span>
-      </div>
-      <div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District 0"></div>
-      <div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete">
-        <span class="tooltiptext">Click to delete district</span>
-      </div>
+      <div class=checkmark><input type="radio" name="selected" checked="checked" title="Activate district to add/remove polygons"></div>
+      <div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District 0" title="Enter name of district"></div>
+      <div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete" title="Click to delete district"></div>
     </div>
     <div id="item_1" class="item">
-      <div class=checkmark><input type="radio" name="selected">
-        <span class="tooltiptext">Activate district to add/remove polygons</span>
-      </div>
-      <div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District 1"></div>
-      <div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete">
-        <span class="tooltiptext">Click to delete district</span>
-      </div>
+      <div class=checkmark><input type="radio" name="selected" title="Activate district to add/remove polygons"></div>
+      <div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District 1" title="Enter name of district"></div>
+      <div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete" title="Click to delete district"></div>
     </div>
-    <div id="add-district" onclick="addDistrict()"><img src="img/Add.svg" alt="Add">
-      <span class="tooltiptext">Click to add a new district</span>
-    </div>
+    <div id="add-district" onclick="addDistrict()"><img src="img/Add.svg" alt="Add" title="Click to add a new district"></div>
     <!-- <div id="map"></div> old! -->
     <div id="map-container">
       <div id="map"></div>
       <div id="zoom-in" class="hide">Zoom in to load boundaries</div>
-      <!-- <input type="button" value="Grey out map" onclick="greyOut()"> -->
       <input type="button" id="load-button" title="Loads boundaries from overpass API" value="Load Boundaries" onclick="fetchExternalGeojson()">
       <div id="loading-animation" class="hide"></div>
     </div>

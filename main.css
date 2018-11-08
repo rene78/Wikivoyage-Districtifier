@@ -50,19 +50,6 @@ ul.topnav li.right {float: right;}
     grid-column: 1;
     grid-row: 11 / 13;
   }
-
-  /*Only show tooltips on large screens. Else there is an ugly black bar on the left hand side*/
-  .delete:hover .tooltiptext{
-    visibility: visible;
-  }
-  
-  .checkmark:hover .tooltiptext{
-    visibility: visible;
-  }
-  
-  #add-district:hover .tooltiptext{
-    visibility: visible;
-  }
 }
 
 @media (max-width: 600px){
@@ -80,8 +67,19 @@ ul.topnav li.right {float: right;}
 #load-button {
   position: absolute;
   bottom: 30px;
-  left: 10px;
+  width: 200px;
+  left: calc(50% - 100px);
   z-index: 444;
+  opacity: .7;
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 #loading-animation {
@@ -170,6 +168,7 @@ ul.topnav li.right {float: right;}
 #add-district {
   position: relative;
   cursor: pointer;
+  padding: 5px;
 }
 
 textarea {
@@ -247,20 +246,4 @@ code {
   border: 1px solid #999;
   display: block;
   padding: 10px;
-}
-
-.tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  
-  /* Position the tooltip */
-  position: absolute;
-  z-index: 2;
-  top: -5px;
-  right: 105%;
 }
