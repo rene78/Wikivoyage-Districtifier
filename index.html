@@ -13,13 +13,6 @@
     <li><a href="https://rene78.github.io/mapmask-geojson-converter/">Mapmask ↔ GeoJSON Converter</a></li>
     <li><a href="https://rene78.github.io/Wikidata-Extractor/">Wikidata-Extractor</a></li>
   </ul>
-
-  <br>
-  <details>
-    <summary>Input</summary>
-    <textarea id="inputGeoJson" placeholder="Please paste your GeoJSON code from overpass turbo here and click on 'Load GeoJSON'." autofocus></textarea> <br>
-    <input type="button" value="Load GeoJSON" onclick="checkInput()"/>
-  </details>
   <br>
   <div id="content">
     <div id="item_0" class="item">
@@ -37,13 +30,14 @@
     <div id="map-container">
       <div id="map"></div>
       <div id="zoom-in" class="hide">Zoom in to load boundaries</div>
-      <input type="button" id="load-button" title="Loads boundaries from overpass API" value="Load Boundaries" onclick="fetchExternalGeojson()">
+      <input type="button" id="load-button" title="Load boundaries from OpenStreetMap" value="Load Boundaries" onclick="fetchExternalGeojson()">
+      <div id="region-info"></div>
       <div id="loading-animation" class="hide"></div>
     </div>
     <div id="output-text-area"><textarea id="textareabox" placeholder="The Wikivoyage code will show up here once you added some elements to a district." readonly></textarea></div>
   </div>
   <details>
-    <summary>Help</summary>
+    <summary id="help-begin" onclick="scrollDown()">Help</summary>
     <h3>Introduction</h3>
     <p>This tool aims to empower editors of Wikivoyage to intuitively create district overview maps (e.g. for <a href="https://en.wikivoyage.org/wiki/Berlin#/map/0">Berlin</a>).</p>
     <h3>Video</h3>

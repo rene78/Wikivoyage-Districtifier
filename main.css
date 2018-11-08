@@ -1,3 +1,8 @@
+/* Smooth scrolling down to "help" */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: linen;
 }
@@ -80,6 +85,17 @@ ul.topnav li.right {float: right;}
   display: inline-block;
   font-size: 16px;
   cursor: pointer;
+}
+
+#region-info {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  z-index: 444;
+  /* width: 300px; */
+  font-size: 14px;
+  background-color: white;
+  opacity: .9;
 }
 
 #loading-animation {

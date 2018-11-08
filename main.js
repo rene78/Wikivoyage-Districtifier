@@ -13,54 +13,27 @@ var layerControl;
 
 var adminLevels = [
   {name:"nothing", features:undefined},
-  {name:"Admin Level 1", features:undefined},
-  {name:"Admin Level 2", features:undefined},
-  {name:"Admin Level 3", features:undefined},
-  {name:"Admin Level 4", features:undefined},
-  {name:"Admin Level 5", features:undefined},
-  {name:"Admin Level 6", features:undefined},
-  {name:"Admin Level 7", features:undefined},
-  {name:"Admin Level 8", features:undefined},
-  {name:"Admin Level 9", features:undefined},
-  {name:"Admin Level 10", features:undefined},
-  {name:"Admin Level 11", features:undefined}
+  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 1</span>", features:undefined}, //only reason for <span> is to implement tooltip
+  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 2</span>", features:undefined},
+  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 3</span>", features:undefined},
+  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 4</span>", features:undefined},
+  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 5</span>", features:undefined},
+  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 6</span>", features:undefined},
+  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 7</span>", features:undefined},
+  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 8</span>", features:undefined},
+  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 9</span>", features:undefined},
+  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 10</span>", features:undefined},
+  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 11</span>", features:undefined},
 ];
 
 //On first load create empty array for Wikidata ID's and set up map with Berlin example GeoJSON
 createWikidataIds();
-//addLeafletMap(exampleGeoJson); //(OLD)
 
-//Add the base map without any layers. (NEW)
+//Add the base map without any layers.
 addLeafletMap();
 
-//Load the Berlin GeoJSON into the map
+//Load the Berlin example GeoJSON into the map
 showGeoJson(exampleGeoJson);
-
-//Check input from input text area
-function checkInput() {
-  purge();
-  var input = document.getElementById("inputGeoJson").value;
-  addLeafletMap(JSON.parse(input));
-}
-
-//Purge website, when new GeoJSON is loaded:
-//1. Remove old leafleat map
-//2. Reset Wikidata ID's array
-//3. Empty output text area
-function purge() {
-  //Replace current map container ("map") with an empty one. Else Leaflet error "container already initialized", when 2nd map is loaded.
-  var newdiv = document.createElement("div");
-  newdiv.setAttribute("id", "map");
-  var oldDiv = document.getElementById("map");
-  var parent = document.getElementById("content");
-  parent.replaceChild(newdiv,oldDiv);
-  //Purge the content of map div element.
-  document.getElementById("map").innerHTML="";
-  //Reset Wikidata ID's array
-  createWikidataIds();
-  //Empty output textareabox
-  document.getElementById("textareabox").innerHTML="";
-}
 
 //Create array with subarrays to save all Wikidata ID's
 function createWikidataIds() {
@@ -70,78 +43,7 @@ function createWikidataIds() {
   }
 }
 
-//Add a Leaflet map to the page (OLD VERSION)
-/*
-function addLeafletMap(inputGeoJson) {
-  var mymap = L.map('map').setView([0, 0], 11);
-
-  L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-  maxZoom: 18
-  }).addTo(mymap);
-
-  jsonLayer = L.geoJSON(inputGeoJson, {
-    onEachFeature: onEachFeature,
-    style: style
-  })
-
-  //Apply standard colors to the polygons (all objects or "features" are forwarded to this function)
-  function style() {
-    //color = feature.properties.fill; 
-    //console.log(color);
-    return {"fillColor": undefined, "opacity": 1, "fillOpacity": 0.7, "color": "#555555", "weight": 2};
-  }
-  //Color polygon according to selected district
-  function onEachFeature(feature, layer) {
-    //bind click
-    layer.on('click', function (e) {
-      //e=event
-      //console.log(e);
-      //console.log(feature.properties.title);
-      //console.log("Anzahl der Koordinaten: " +feature.geometry.coordinates[0].length);
-      //console.log("Hier sind die Koordinaten gespeichert: " +feature.geometry.coordinates[0][0][0]);
-      //createMapmask(feature);
-      //console.log(layer);
-      //console.log(layer.options.fillColor);
-      //var check=layer.options.fillColor === definePolygonColor(feature);
-      //console.log(check);
-
-      //Check, if the polygon already has a color defined.
-      //If no OR
-      //If current color is a different one than the one, which is supposed to be applied:
-      //--> Color the polygon according to the selected district.
-      //Else if (i.e. color already defined): Remove the color again. Behaves like on/off toggle
-
-      var polygonColor;
-      if (typeof layer.options.fillColor == "undefined") {
-        //Case: No color defined for this district yet
-        polygonColor = stdColors[whatsSelected()];
-        layer.setStyle({fillColor: polygonColor});
-        addToWikidataArray(feature.properties.tags.wikidata);
-      } else if (layer.options.fillColor != stdColors[whatsSelected()]) {
-        //Case: Current fill color is different than selected color
-        updateWikidataArray(layer.options.fillColor, feature.properties.tags.wikidata);
-        polygonColor = stdColors[whatsSelected()];
-        layer.setStyle({fillColor: polygonColor});
-      }  else {
-        //Case: Current fill color = Selected color
-        layer.setStyle({fillColor: undefined});
-        removeFromWikidataArray(feature.properties.tags.wikidata);
-      }
-
-      //console.log("Wikidata ID: " +feature.properties.tags.wikidata);
-    });
-  }
-
-  //Add the JSON layer to the map
-  jsonLayer.addTo(mymap);
-
-  //Center and zoom the map on the provided GeoJSON
-  mymap.fitBounds(jsonLayer.getBounds());
-}
-*/
-
-//Add a Leaflet map with empty layers to the page (NEW)
+//Add a Leaflet map with empty layers to the page
 function addLeafletMap() {
   mymap = L.map('map').setView([0, 0], 1);
 
@@ -164,7 +66,7 @@ function addLeafletMap() {
   adminLevels[11].features = L.layerGroup().addTo( mymap );//layerAdminL11 = L.layerGroup().addTo( mymap );
 }
 
-//download GeoJSON via overpass API and forward it to showGeoJson function (NEW)
+//download GeoJSON via overpass API and forward it to showGeoJson function
 function fetchExternalGeojson() {
   //make sure that polygons, which have already been loaded into the map, are excluded from the query
   //only create exclusion list for subsequent queries (i.e. from 2nd query onwards)
@@ -221,7 +123,7 @@ function fetchExternalGeojson() {
   });
 }
 
-//Check response from API. If error throw it to catch (NEW)
+//Check response from API. If error throw it to catch
 function handleErrors(response) {
   if (!response.ok) {
     throw Error(response.statusText);
@@ -229,7 +131,7 @@ function handleErrors(response) {
   return response;
 }
 
-//Show GeoJSON polygons on the Leaflet map & add layer control on top right of the map (NEW)
+//Show GeoJSON polygons on the Leaflet map & add layer control on top right of the map
 function showGeoJson(inputGeoJson) {
   jsonLayer = L.geoJSON(inputGeoJson, {
     onEachFeature: onEachFeature,
@@ -284,7 +186,7 @@ function showGeoJson(inputGeoJson) {
   }
 }
 
-//Apply standard colors to the polygons (NEW)
+//Apply standard colors to the polygons
 //(each object or "feature" is computed by this function)
 function style() {
   //color = feature.properties.fill; 
@@ -296,38 +198,48 @@ function style() {
 //2. Add each OSM relation id to an array to make sure, that this polygon isn't downloaded on subsequent fetches
 //(each object or "feature" is computed by this function)
 function onEachFeature(feature, layer) {
-    //bind click
-    layer.on('click', function (e) {
-      //e=event
-      //console.log(e);
-      //console.log(feature.properties.title);
 
-      /*Check, if the polygon already has a color defined.
-      If no OR
-      If current color is a different one than the one, which is supposed to be applied:
-      --> Color the polygon according to the selected district.
-      Else if (i.e. color already defined): Remove the color again. Behaves like on/off toggle
-      */
+  //Output name and Wikidata ID at the bottom left part of the map on mouse over
+  layer.on('mouseover', function (e) {
+    var name = feature.properties.tags.name;
+    var wd = feature.properties.tags.wikidata;
+    //console.log(e);
+    document.getElementById("region-info").innerText = name + ", Wikidata-ID: " + wd;
+    //console.log(name + ", Wikidata-ID: " + wd);
+  });
 
-      var polygonColor;
-      if (typeof layer.options.fillColor == "undefined") {
-        //Case: No color defined for this district yet
-        polygonColor = stdColors[whatsSelected()];
-        layer.setStyle({fillColor: polygonColor});
-        addToWikidataArray(feature.properties.tags.wikidata);
-      } else if (layer.options.fillColor != stdColors[whatsSelected()]) {
-        //Case: Current fill color is different than selected color
-        updateWikidataArray(layer.options.fillColor, feature.properties.tags.wikidata);
-        polygonColor = stdColors[whatsSelected()];
-        layer.setStyle({fillColor: polygonColor});
-      }  else {
-        //Case: Current fill color = Selected color
-        layer.setStyle({fillColor: undefined});
-        removeFromWikidataArray(feature.properties.tags.wikidata);
-      }
+  //bind click
+  layer.on('click', function (e) {
+    //e=event
+    //console.log(e);
+    //console.log(feature.properties.title);
 
-      //console.log("Wikidata ID: " +feature.properties.tags.wikidata);
-    });
+    /*Check, if the polygon already has a color defined.
+    If no OR
+    If current color is a different one than the one, which is supposed to be applied:
+    --> Color the polygon according to the selected district.
+    Else if (i.e. color already defined): Remove the color again. Behaves like on/off toggle
+    */
+
+    var polygonColor;
+    if (typeof layer.options.fillColor == "undefined") {
+      //Case: No color defined for this district yet
+      polygonColor = stdColors[whatsSelected()];
+      layer.setStyle({fillColor: polygonColor});
+      addToWikidataArray(feature.properties.tags.wikidata);
+    } else if (layer.options.fillColor != stdColors[whatsSelected()]) {
+      //Case: Current fill color is different than selected color
+      updateWikidataArray(layer.options.fillColor, feature.properties.tags.wikidata);
+      polygonColor = stdColors[whatsSelected()];
+      layer.setStyle({fillColor: polygonColor});
+    }  else {
+      //Case: Current fill color = Selected color
+      layer.setStyle({fillColor: undefined});
+      removeFromWikidataArray(feature.properties.tags.wikidata);
+    }
+
+    //console.log("Wikidata ID: " +feature.properties.tags.wikidata);
+  });
 
   //add GeoJSON features to layer
   //var admin_level = feature.properties.admin_level;
@@ -364,7 +276,7 @@ function onEachFeature(feature, layer) {
   //console.log(osmIdsArray);
 }
 
-//Filter out all the label points from GeoJSON so the map doesn't look so messy (NEW)
+//Filter out all the label points from GeoJSON so the map doesn't look so messy
 //(each object or "feature" is computed by this function)
 function filterPoints(layer) {
   //console.log(layer);
@@ -375,7 +287,7 @@ function filterPoints(layer) {
   }
 }
 
-//get the s,w,n,e cordinates of the current map section and write it to bbox variable (NEW)
+//get the s,w,n,e cordinates of the current map section and write it to bbox variable
 function getBboxCoordinates() {
 console.log("Current zoom level: " +mymap.getZoom());
 var bounds = mymap.getBounds();
@@ -387,7 +299,7 @@ return bbox;
 console.log("bbox: " +bbox);
 }
 
-//Check current zoom level of map and grey it out with message, if zoom level < 7 (NEW)
+//Check current zoom level of map and grey it out with message, if zoom level < 7
 mymap.on('zoom', function(e) { // e is an event object (MouseEvent in this case)
   var currentZoomLevel = mymap.getZoom();
   // var map = document.getElementById("map");
@@ -600,4 +512,10 @@ function createOutput() {
     }
   }
   document.getElementById("textareabox").innerHTML = mapshape;
+}
+
+//Scroll down to help when clicking on "Help"
+function scrollDown() {
+  var helpBegin = document.getElementById("help-begin");
+  setTimeout(function(){ helpBegin.scrollIntoView(); }, 10); //Without delay scrollIntoView does not work.
 }
