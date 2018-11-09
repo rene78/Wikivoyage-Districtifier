@@ -198,7 +198,12 @@ function onEachFeature(feature, layer) {
 
   //Output name and Wikidata ID at the bottom left part of the map on mouse over
   layer.on('mouseover', function (e) {
-    var name = feature.properties.tags.name;
+    //use english name, if available. Else use the normal "name" tag. Dot/bracket notation used due to colon (https://stackoverflow.com/q/4925760/5263954)
+    if (typeof feature.properties.tags['name:en'] == 'undefined') {
+      name = feature.properties.tags;
+    } else {
+      name = feature.properties.tags['name:en'];
+    }
     var wd = feature.properties.tags.wikidata;
     //console.log(e);
     document.getElementById("region-info").innerText = name + ", Wikidata-ID: " + wd;
@@ -552,6 +557,7 @@ function scrollDown() {
   setTimeout(function(){ helpBegin.scrollIntoView(); }, 10); //Without delay scrollIntoView does not work.
 }
 
+//When clicking in name input field select the whole text and check the district/region
 function selectCheckmarkAndName(element) {
   var checkbox = element.parentElement.parentElement.firstElementChild.firstElementChild;
   checkbox.checked = true;
