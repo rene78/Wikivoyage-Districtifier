@@ -2,12 +2,9 @@ var itemCounter = 1;
 var stdColors = ["#ac5c91", "#d5dc76", "#b5d29f", "#b383b3", "#71b37b", "#8a84a3", "#d09440", "#578e86", "#d56d76", "#4f93c0", "#69999f"];
 var jsonLayer;
 var wikidataIds;
-
-//New variables from "dynamic geojson import"
-var jsonLayer;
 var osmTiles;
 var mymap;
-var osmIdsArray = [];
+var exclusionListArray = [];
 var exclusionList="";
 var layerControl;
 
@@ -70,8 +67,8 @@ function addLeafletMap() {
 function fetchExternalGeojson() {
   //make sure that polygons, which have already been loaded into the map, are excluded from the query
   //only create exclusion list for subsequent queries (i.e. from 2nd query onwards)
-  if (osmIdsArray.length > 0) {
-    exclusionList = "- relation(id:" + osmIdsArray.join() + ");";
+  if (exclusionListArray.length > 0) {
+    exclusionList = "- relation(id:" + exclusionListArray.join() + ");";
   }
   //console.log("Content of exclusion list: " +exclusionList);
 
@@ -265,15 +262,15 @@ function onEachFeature(feature, layer) {
   //var osmId = feature.properties["@id"];
   //osmId = osmId.replace( /^\D+/g, '');
   //console.log(osmId);
-  //osmIdsArray.push(osmId);
+  //exclusionListArray.push(osmId);
 
   //for GeoJSON's from overpass and osmtogeojson
   var osmId = feature.properties.id;
 
-  if (osmIdsArray.includes(osmId)==false) {
-    osmIdsArray.push(osmId);
+  if (exclusionListArray.includes(osmId)==false) {
+    exclusionListArray.push(osmId);
   }
-  //console.log(osmIdsArray);
+  //console.log(exclusionListArray);
 }
 
 //Filter out all the label points from GeoJSON so the map doesn't look so messy
@@ -377,7 +374,7 @@ function addDistrict() {
   }
   itemCounter++;
   //console.log(itemCounter);
-  var item = '<div id="item_'+itemCounter+'" class="item"><div class=checkmark><input type="radio" name="selected" checked="checked" title="Activate district to add/remove polygons"></div><div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District '+itemCounter+'" title="Enter name of district"></div><div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete" title="Click to delete district"></div></div>';
+  var item = '<div id="item_'+itemCounter+'" class="item"><div class=checkmark><input type="radio" name="selected" checked="checked" title="Activate district to add/remove polygons"></div><div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District '+itemCounter+'" title="Enter name of district" onfocus="selectCheckmark(this)"></div><div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete" title="Click to delete district"></div></div>';
   var content = document.getElementById('add-district');
   content.insertAdjacentHTML('beforebegin', item);
 
@@ -407,25 +404,47 @@ function addDistrict() {
 
 //Remove district from table & delete all Wikidata elements from the corresponding subarray & remove color from selected polygons
 function removeDistrict(dustbin) {
+  //If there is only one region item left
+  if (itemCounter < 1) {
+    removeColor(wikidataIds[0]);
+    wikidataIds.splice(0,1); //remove 1st subarray (i.e. region/district)
+    wikidataIds.push([]); //add an empty 11th subarray to wikidataIDs
+    createOutput(); //update output field
+    return;
+  }
+
   var itemToDelete = dustbin.parentNode;
   //Find out at which position "itemToDelete" is in order to know the array number of which to remove the subarray entries.
   var items = document.getElementsByClassName("item");
+  var checkmarks = document.getElementsByClassName("checkmark");
   for (i=0;i<items.length;i++) {
     //console.log(items[i]);
     if (items[i] == itemToDelete) {
       //console.log(i);
       removeColor(wikidataIds[i]); //remove the color of all polygons from the soon to be deleted district
       //console.log(wikidataIds[i]);
-      wikidataIds.splice(i,1);
-      wikidataIds.push([]);
-      //wikidataIds[i].splice(0,wikidataIds[i].length); //from position 0 remove all items of this subarray
-      oneColorUp(i); //Color all districts below the deleted one with a color one above the current one.
+
+      //Check if soon to be deleted district has the checkmark
+      //console.log(checkmarks[i].childNodes[0]);
+      if (checkmarks[i].childNodes[0].checked) {
+        //Deleted item had checkmark!
+        //console.log("Checkmark was on!");
+        if (i!=0) { //if deleted item was not the first one:
+          checkmarks[0].childNodes[0].checked = true; //check the first item
+        } else {
+          checkmarks[1].childNodes[0].checked = true; //else check the second item. Will move to 1st position after remove() method below
+        }
+      }
+
+      wikidataIds.splice(i,1); //remove subarray (i.e. region/district)
+      wikidataIds.push([]); //add an empty 11th subarray to wikidataIDs
+      oneColorUp(i); //Color all districts below the deleted one with the next higher color (e.g. from StdColor 4 to 3).
       console.log(wikidataIds);
       break;
     }
   }
 
-  itemToDelete.remove();
+  itemToDelete.remove(); //Remove elements from DOM
   itemCounter--;
   //console.log(itemCounter);
 
@@ -511,7 +530,20 @@ function createOutput() {
       mapshape += "{{Mapshape|type=geoshape|wikidata=" + wikidataId + "|group=map1|fill=" + fill + "|title=" + title + "}}\r\n";
     }
   }
-  document.getElementById("textareabox").innerHTML = mapshape;
+  //Only output the Wikivoyage code, if there are Wikidata elements in array "wikidataIds"
+  var empty = true;
+  for (var i = 0; i < wikidataIds.length; i++) {
+    if (wikidataIds[i].length !=0) {
+      empty=false;
+      break;
+    }
+  }
+
+  if (empty) {
+    document.getElementById("textareabox").innerHTML="";
+  } else {
+    document.getElementById("textareabox").innerHTML = mapshape;
+  }
 }
 
 //Scroll down to help when clicking on "Help"
@@ -519,3 +551,14 @@ function scrollDown() {
   var helpBegin = document.getElementById("help-begin");
   setTimeout(function(){ helpBegin.scrollIntoView(); }, 10); //Without delay scrollIntoView does not work.
 }
+
+function selectCheckmark(element) {
+  console.log(element.parentNode.parentNode.childNodes[1].childNodes[0]);
+  element.parentNode.parentNode.childNodes[1].childNodes[0].checked = true;
+}
+
+//Update output, if name of region/district is changed
+document.body.addEventListener("keyup", event => {
+  //console.log("Key pressed!");
+  createOutput();
+});
