@@ -374,7 +374,7 @@ function addDistrict() {
   }
   itemCounter++;
   //console.log(itemCounter);
-  var item = '<div id="item_'+itemCounter+'" class="item"><div class=checkmark><input type="radio" name="selected" checked="checked" title="Activate district to add/remove polygons"></div><div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District '+itemCounter+'" title="Enter name of district" onfocus="selectCheckmark(this)"></div><div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete" title="Click to delete district"></div></div>';
+  var item = '<div id="item_'+itemCounter+'" class="item"><div class=checkmark><input type="radio" name="selected" checked="checked" title="Activate district to add/remove polygons"></div><div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District '+itemCounter+'" title="Enter name of district" onfocus="selectCheckmarkAndName(this)" oninput="createOutput()"></div><div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete" title="Click to delete district"></div></div>';
   var content = document.getElementById('add-district');
   content.insertAdjacentHTML('beforebegin', item);
 
@@ -509,7 +509,7 @@ function removeFromWikidataArray(wikidataId) {
   createOutput();
 }
 
-//Create Mapframe and Mapshapes for Wikivoyage
+//Create/update output text for Wikivoyage (i.e. Mapframe and Mapshapes)
 function createOutput() {
   //Create mapshapes
   var mapshape="{{Mapframe|width=500|height=500|group=map1}}\r\n";
@@ -552,13 +552,9 @@ function scrollDown() {
   setTimeout(function(){ helpBegin.scrollIntoView(); }, 10); //Without delay scrollIntoView does not work.
 }
 
-function selectCheckmark(element) {
-  console.log(element.parentNode.parentNode.childNodes[1].childNodes[0]);
-  element.parentNode.parentNode.childNodes[1].childNodes[0].checked = true;
+function selectCheckmarkAndName(element) {
+  var checkbox = element.parentElement.parentElement.firstElementChild.firstElementChild;
+  checkbox.checked = true;
+  //Select all text in text field
+  element.setSelectionRange(0, element.value.length)
 }
-
-//Update output, if name of region/district is changed
-document.body.addEventListener("keyup", event => {
-  //console.log("Key pressed!");
-  createOutput();
-});

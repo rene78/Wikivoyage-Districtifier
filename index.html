@@ -17,12 +17,12 @@
   <div id="content">
     <div id="item_0" class="item">
       <div class=checkmark><input type="radio" name="selected" checked="checked" title="Activate district to add/remove polygons"></div>
-      <div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District 0" title="Enter name of district" onfocus="selectCheckmark(this)"></div>
+      <div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District 0" title="Enter name of district" onfocus="selectCheckmarkAndName(this)" oninput="createOutput()"></div>
       <div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete" title="Click to delete district"></div>
     </div>
     <div id="item_1" class="item">
       <div class=checkmark><input type="radio" name="selected" title="Activate district to add/remove polygons"></div>
-      <div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District 1" title="Enter name of district" onfocus="selectCheckmark(this)"></div>
+      <div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District 1" title="Enter name of district" onfocus="selectCheckmarkAndName(this)" oninput="createOutput()"></div>
       <div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete" title="Click to delete district"></div>
     </div>
     <div id="add-district" onclick="addDistrict()"><img src="img/Add.svg" alt="Add" title="Click to add a new district"></div>
