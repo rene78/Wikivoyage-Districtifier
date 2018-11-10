@@ -73,17 +73,20 @@ function fetchExternalGeojson() {
   //console.log("Content of exclusion list: " +exclusionList);
 
   //Make sure that the type of downloaded admin boundaries depends on current zoom level.
-  //If zoomed in closely (e.g. zoom level>9 show admin_levels 7-11). If zoom level>=6 --> admin_level 3-6, else "zoom in closer!"
-  var lowerAdminLevel = 3;
-  var higherAdminLevel = 6;
+  //If zoomed in closely (e.g. zoom level>9 show admin_levels 5-11). If zoom level 7, 8 and 9 --> admin_level 3-6, else "zoom in closer!"
+  var lowerAdminLevel;
+  var higherAdminLevel;
   var currentZoomLevel = mymap.getZoom();
 
   if (currentZoomLevel < 7) {
     alert("Zoom in closer to load boundaries!");
     return;
-  } else if (currentZoomLevel > 9){
-    lowerAdminLevel = 7;
+  } else if (currentZoomLevel > 9) {
+    lowerAdminLevel = 5;
     higherAdminLevel = 11;
+  } else { //i.e. zoom level 7, 8 and 9
+    lowerAdminLevel = 3;
+    higherAdminLevel = 6;
   }
 
   var bbox = getBboxCoordinates(); //get bounding box from current map view
@@ -199,10 +202,11 @@ function onEachFeature(feature, layer) {
   //Output name and Wikidata ID at the bottom left part of the map on mouse over
   layer.on('mouseover', function (e) {
     //use english name, if available. Else use the normal "name" tag. Dot/bracket notation used due to colon (https://stackoverflow.com/q/4925760/5263954)
+    
     if (typeof feature.properties.tags['name:en'] == 'undefined') {
-      name = feature.properties.tags;
+      var name = feature.properties.tags.name;
     } else {
-      name = feature.properties.tags['name:en'];
+      var name = feature.properties.tags['name:en'];
     }
     var wd = feature.properties.tags.wikidata;
     //console.log(e);
@@ -301,7 +305,7 @@ return bbox;
 console.log("bbox: " +bbox);
 }
 
-//Check current zoom level of map and grey it out with message, if zoom level < 7
+//Check current zoom level of map and show info message, if zoom level < 7
 mymap.on('zoom', function(e) { // e is an event object (MouseEvent in this case)
   var currentZoomLevel = mymap.getZoom();
   // var map = document.getElementById("map");
@@ -560,6 +564,7 @@ function scrollDown() {
 //When clicking in name input field select the whole text and check the district/region
 function selectCheckmarkAndName(element) {
   var checkbox = element.parentElement.parentElement.firstElementChild.firstElementChild;
+  // console.log(checkbox);
   checkbox.checked = true;
   //Select all text in text field
   element.setSelectionRange(0, element.value.length)
