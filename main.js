@@ -2,10 +2,11 @@ var itemCounter = 1;
 var stdColors = ["#ac5c91", "#d5dc76", "#b5d29f", "#b383b3", "#71b37b", "#8a84a3", "#d09440", "#578e86", "#d56d76", "#4f93c0", "#69999f"];
 var jsonLayer;
 var wikidataIds;
-var osmTiles;
+//var OpenStreetMap_Mapnik;
 var mymap;
 var exclusionListArray = [];
 var exclusionList="";
+var basemapControl;
 var layerControl;
 
 var adminLevels = [
@@ -42,25 +43,41 @@ function createWikidataIds() {
 
 //Add a Leaflet map with empty layers to the page
 function addLeafletMap() {
-  mymap = L.map('map').setView([0, 0], 1);
+  var CartoDB_Voyager = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 18
+  });
 
-  osmTiles = L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-  maxZoom: 18
-  }).addTo(mymap);
+  var OpenStreetMap_Mapnik = L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+    maxZoom: 18
+  });
+
+  mymap = L.map('map', {
+    center: [0, 0],
+    zoom: 1,
+    layers: [CartoDB_Voyager, OpenStreetMap_Mapnik]
+  });
+
+  // Define base map layer control elements on top right of map
+  basemapControl = {
+    "English Names": CartoDB_Voyager,
+    "Local Names": OpenStreetMap_Mapnik
+  };
 
   // create operational layers that are empty for now
-  adminLevels[1].features = L.layerGroup().addTo( mymap );//layerAdminL1 = L.layerGroup().addTo( mymap );
-  adminLevels[2].features = L.layerGroup().addTo( mymap );//layerAdminL2 = L.layerGroup().addTo( mymap );
-  adminLevels[3].features = L.layerGroup().addTo( mymap );//layerAdminL3 = L.layerGroup().addTo( mymap );
-  adminLevels[4].features = L.layerGroup().addTo( mymap );//layerAdminL4 = L.layerGroup().addTo( mymap );
-  adminLevels[5].features = L.layerGroup().addTo( mymap );//layerAdminL5 = L.layerGroup().addTo( mymap );
-  adminLevels[6].features = L.layerGroup().addTo( mymap );//layerAdminL6 = L.layerGroup().addTo( mymap );
-  adminLevels[7].features = L.layerGroup().addTo( mymap );//layerAdminL7 = L.layerGroup().addTo( mymap );
-  adminLevels[8].features = L.layerGroup().addTo( mymap );//layerAdminL8 = L.layerGroup().addTo( mymap );
-  adminLevels[9].features = L.layerGroup().addTo( mymap );//layerAdminL9 = L.layerGroup().addTo( mymap );
-  adminLevels[10].features = L.layerGroup().addTo( mymap );//layerAdminL10 = L.layerGroup().addTo( mymap );
-  adminLevels[11].features = L.layerGroup().addTo( mymap );//layerAdminL11 = L.layerGroup().addTo( mymap );
+  adminLevels[1].features = L.layerGroup().addTo( mymap );
+  adminLevels[2].features = L.layerGroup().addTo( mymap );
+  adminLevels[3].features = L.layerGroup().addTo( mymap );
+  adminLevels[4].features = L.layerGroup().addTo( mymap );
+  adminLevels[5].features = L.layerGroup().addTo( mymap );
+  adminLevels[6].features = L.layerGroup().addTo( mymap );
+  adminLevels[7].features = L.layerGroup().addTo( mymap );
+  adminLevels[8].features = L.layerGroup().addTo( mymap );
+  adminLevels[9].features = L.layerGroup().addTo( mymap );
+  adminLevels[10].features = L.layerGroup().addTo( mymap );
+  adminLevels[11].features = L.layerGroup().addTo( mymap );
 }
 
 //download GeoJSON via overpass API and forward it to showGeoJson function
@@ -143,11 +160,6 @@ function showGeoJson(inputGeoJson) {
 
   //Center and zoom the map on the provided GeoJSON
   mymap.fitBounds(jsonLayer.getBounds());
-
-  // Define layer control elements on top right of map
-  var basemapControl = {
-    "OSM Tiles": osmTiles, // an option to select a basemap (makes more sense if you have multiple basemaps)
-  }
 
   var adminLayerControl={};
   var key;
