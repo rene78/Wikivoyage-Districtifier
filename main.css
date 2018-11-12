@@ -244,6 +244,13 @@ img {
   width: auto;
 }
 
+#how-to-image {
+  width:100%;
+  max-width:1600px;
+  height:auto;
+  border: 3px solid red;
+}
+
 iframe {
   max-width: 100%;
 }

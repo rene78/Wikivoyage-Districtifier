@@ -41,32 +41,19 @@
     <h3>Introduction</h3>
     <p>This tool aims to empower editors of Wikivoyage to intuitively create district overview maps (e.g. for <a href="https://en.wikivoyage.org/wiki/Berlin#/map/0">Berlin</a>).</p>
     <h3>Video</h3>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/ybu-61c8JZM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/Ut61apV4FMY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     <h3>Workflow</h3>
     <ol>
-      <li><strong>Query</strong> all needed <strong>district polygons</strong> with help of <a href="http://overpass-turbo.eu/">Overpass Turbo</a>. See below for a best practice.</li>
-      <li><strong>Paste</strong> them into this tool an click on <strong>Load</strong>.</li>
-      <li><strong>Add and name districts</strong> on the right hand side and <strong>add polygons to them</strong> by selecting elements on the map.</li>
-      <li>Once done <strong>copy code</strong> at the bottom and <strong>paste it to</strong> the appropriate <strong>Wikivoyage</strong> page.</li>
+      <li>Go to the location on the map, that you want to districtify and click on <strong>Load Boundaries</strong>.</li>
+      <li><strong>Remove</strong> all the <strong>administrative levels</strong>, which are not relevant for you.</li>
+      <li><strong>Define districts:</strong></li>
+      <ol type="a">
+        <li>By adding removing and naming them.</li>
+        <li>Add polygons to each district by clicking on the map.</li>
+      </ol>
+      <li>Once satisfied click in the textbox below the map, <strong>copy the output and paste it to Wikivoyage</strong>.</li>
     </ol>
-    <h3>Best practice to define a query in overpass</h3>
-    <p>The example query below will download all districts of Prague</p>
-    <code>
-      [out:json][timeout:60];<br>
-      area[admin_level=8][name="Praha"]->.search;<br>
-      (rel(area.search)[admin_level=10][wikidata=""];<br>
-      );<br>
-      out body;<br>
-      >;<br>
-      out skel qt;
-    </code>
-
-    <ol>
-      <li>Define <strong>JSON</strong> as the output format. Define a timeout to cancel the query after a certain amount of time (optional).</li>
-      <li><strong>Define an area, within which to search for districts</strong> This area could be a city, municipality or country. The correct name of this area as stated in the OSM relation is very important. Thus go to OSM and enter the Name into the search field. Click on the result (e.g. <a href="https://www.openstreetmap.org/relation/439840">result for Prague</a>) and <strong>copy the value of "name" into your overpass query</strong> ("Praha" in the example above). Then search for "admin_level" in the same result and copy this one as well (optional. In the example above it is "8").</li>
-      <li>In the next line we define <strong>for what to search</strong> within the city of Prague. We are looking for subdistricts. Thus by trial-and-error we have to enter an "admin_level" larger than the one defined in the search field (in the example above results will show up with "admin_level=10"). To get the right admin_level without trial-and-error check the sub-districts in OSM and copy the value of "admin_level" (e.g. <a href="https://www.openstreetmap.org/relation/428823">Vyšehrad has "admin_level=10".</a> Thus you enter "10" in your query).</li>
-      <li>Click on <strong>Run</strong>. After a while the district polygons show up on the map. Click on <strong>Export --> Copy as GeoJSON and paste it on the input text area</strong> on this website.</li>
-    </ol>
+    <img id="how-to-image" src="img/how-to.jpg" alt="Workflow picture">
     <h3>Improve</h3>
     <p>If you have ideas on how to make this tool better please head over to the <a href="https://github.com/rene78/Wikivoyage-Districtifier">github page</a> and participate or leave a comment down below.</p>
 
