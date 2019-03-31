@@ -310,11 +310,11 @@ function getBboxCoordinates() {
 console.log("Current zoom level: " +mymap.getZoom());
 var bounds = mymap.getBounds();
 var bbox = bounds.getSouthWest().lat + ',' +
-            bounds.getSouthWest().lng + ',' +
+            bounds.getSouthWest().wrap().lng + ',' +
             bounds.getNorthEast().lat + ',' +
-            bounds.getNorthEast().lng;
-return bbox;
+            bounds.getNorthEast().wrap().lng;
 console.log("bbox: " +bbox);
+return bbox;
 }
 
 //Check current zoom level of map and show info message, if zoom level < 7
