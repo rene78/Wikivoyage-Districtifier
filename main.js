@@ -5,24 +5,27 @@ var wikidataIds;
 //var OpenStreetMap_Mapnik;
 var mymap;
 var exclusionListArray = [];
-var exclusionList="";
+var exclusionList = "";
 var basemapControl;
 var layerControl;
 
 var adminLevels = [
-  {name:"nothing", features:undefined},
-  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 1</span>", features:undefined}, //only reason for <span> is to implement tooltip
-  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 2</span>", features:undefined},
-  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 3</span>", features:undefined},
-  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 4</span>", features:undefined},
-  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 5</span>", features:undefined},
-  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 6</span>", features:undefined},
-  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 7</span>", features:undefined},
-  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 8</span>", features:undefined},
-  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 9</span>", features:undefined},
-  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 10</span>", features:undefined},
-  {name:"<span title='Show/hide regions with certain admin level'>Admin Level 11</span>", features:undefined},
+  { name: "nothing", features: undefined },
+  { name: "<span title='Show/hide regions with certain admin level'>Admin Level 1</span>", features: undefined }, //only reason for <span> is to implement tooltip
+  { name: "<span title='Show/hide regions with certain admin level'>Admin Level 2</span>", features: undefined },
+  { name: "<span title='Show/hide regions with certain admin level'>Admin Level 3</span>", features: undefined },
+  { name: "<span title='Show/hide regions with certain admin level'>Admin Level 4</span>", features: undefined },
+  { name: "<span title='Show/hide regions with certain admin level'>Admin Level 5</span>", features: undefined },
+  { name: "<span title='Show/hide regions with certain admin level'>Admin Level 6</span>", features: undefined },
+  { name: "<span title='Show/hide regions with certain admin level'>Admin Level 7</span>", features: undefined },
+  { name: "<span title='Show/hide regions with certain admin level'>Admin Level 8</span>", features: undefined },
+  { name: "<span title='Show/hide regions with certain admin level'>Admin Level 9</span>", features: undefined },
+  { name: "<span title='Show/hide regions with certain admin level'>Admin Level 10</span>", features: undefined },
+  { name: "<span title='Show/hide regions with certain admin level'>Admin Level 11</span>", features: undefined },
 ];
+
+//Load external navbar.html
+includeHTML();
 
 //On first load create empty array for Wikidata ID's and set up map with Berlin example GeoJSON
 createWikidataIds();
@@ -36,8 +39,8 @@ showGeoJson(exampleGeoJson);
 //Create array with subarrays to save all Wikidata ID's
 function createWikidataIds() {
   wikidataIds = new Array(11);
-  for (i=0; i<wikidataIds.length; i++) {
-    wikidataIds[i]=new Array;
+  for (i = 0; i < wikidataIds.length; i++) {
+    wikidataIds[i] = new Array;
   }
 }
 
@@ -67,17 +70,17 @@ function addLeafletMap() {
   };
 
   // create operational layers that are empty for now
-  adminLevels[1].features = L.layerGroup().addTo( mymap );
-  adminLevels[2].features = L.layerGroup().addTo( mymap );
-  adminLevels[3].features = L.layerGroup().addTo( mymap );
-  adminLevels[4].features = L.layerGroup().addTo( mymap );
-  adminLevels[5].features = L.layerGroup().addTo( mymap );
-  adminLevels[6].features = L.layerGroup().addTo( mymap );
-  adminLevels[7].features = L.layerGroup().addTo( mymap );
-  adminLevels[8].features = L.layerGroup().addTo( mymap );
-  adminLevels[9].features = L.layerGroup().addTo( mymap );
-  adminLevels[10].features = L.layerGroup().addTo( mymap );
-  adminLevels[11].features = L.layerGroup().addTo( mymap );
+  adminLevels[1].features = L.layerGroup().addTo(mymap);
+  adminLevels[2].features = L.layerGroup().addTo(mymap);
+  adminLevels[3].features = L.layerGroup().addTo(mymap);
+  adminLevels[4].features = L.layerGroup().addTo(mymap);
+  adminLevels[5].features = L.layerGroup().addTo(mymap);
+  adminLevels[6].features = L.layerGroup().addTo(mymap);
+  adminLevels[7].features = L.layerGroup().addTo(mymap);
+  adminLevels[8].features = L.layerGroup().addTo(mymap);
+  adminLevels[9].features = L.layerGroup().addTo(mymap);
+  adminLevels[10].features = L.layerGroup().addTo(mymap);
+  adminLevels[11].features = L.layerGroup().addTo(mymap);
 }
 
 //download GeoJSON via overpass API and forward it to showGeoJson function
@@ -110,8 +113,8 @@ function fetchExternalGeojson() {
   //var bbox = "47.449,8.287,47.490,8.355"; //Some hardcoded values for bounding box for testing
 
   //Overpass search query
-  var searchQuery = '[out:json][timeout:60];(relation[admin_level](if:(t["admin_level"] >= '+lowerAdminLevel+' &&t["admin_level"] <= '+higherAdminLevel+'))["wikidata"]('+bbox+');'+exclusionList+');out body;>;out skel qt;';
-  console.log("Paste to overpass turbo for debugging purposes: "+searchQuery);
+  var searchQuery = '[out:json][timeout:60];(relation[admin_level](if:(t["admin_level"] >= ' + lowerAdminLevel + ' &&t["admin_level"] <= ' + higherAdminLevel + '))["wikidata"](' + bbox + ');' + exclusionList + ');out body;>;out skel qt;';
+  console.log("Paste to overpass turbo for debugging purposes: " + searchQuery);
   var searchQueryEnc = encodeURIComponent(searchQuery);
   var apiUrl = "https://overpass-api.de/api/interpreter?data=" + searchQueryEnc;
   console.log(apiUrl);
@@ -120,24 +123,24 @@ function fetchExternalGeojson() {
   greyOut();
 
   fetch(apiUrl)
-  .then(handleErrors)
-  .then(function(response) {
-    return response.json();
-  })
-  .then(function (overpassJson) {
-    //console.log(overpassJson);
-    //Convert JSON from overpass turbo into a proper GeoJSON
-    var convGeoJson = osmtogeojson(overpassJson);
-    //console.log(convGeoJson);
-    showGeoJson(convGeoJson);
+    .then(handleErrors)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (overpassJson) {
+      //console.log(overpassJson);
+      //Convert JSON from overpass turbo into a proper GeoJSON
+      var convGeoJson = osmtogeojson(overpassJson);
+      //console.log(convGeoJson);
+      showGeoJson(convGeoJson);
 
-    //stop greying out map after load of map
-    greyOut();
-  }).catch(function(error) {
-    console.log("Something went wrong! " +error);
-    //also stop greying out map if there was an error
-    greyOut();
-  });
+      //stop greying out map after load of map
+      greyOut();
+    }).catch(function (error) {
+      console.log("Something went wrong! " + error);
+      //also stop greying out map if there was an error
+      greyOut();
+    });
 }
 
 //Check response from API. If error throw it to catch
@@ -161,7 +164,7 @@ function showGeoJson(inputGeoJson) {
   //Center and zoom the map on the provided GeoJSON
   mymap.fitBounds(jsonLayer.getBounds());
 
-  var adminLayerControl={};
+  var adminLayerControl = {};
   var key;
   var val;
 
@@ -184,13 +187,13 @@ function showGeoJson(inputGeoJson) {
 
   /* 5 */
   // Add the control component, a layer list with checkboxes for operational layers and radio buttons for basemaps
-  layerControl = L.control.layers( basemapControl, adminLayerControl,{collapsed:false} ).addTo( mymap )
+  layerControl = L.control.layers(basemapControl, adminLayerControl, { collapsed: false }).addTo(mymap)
   //console.log(layerControl);
 
   //Update layers on new load. Without this on/off the newly loaded element won't be on the layer.
   //Very awkward solution! There must be some update functionality!
   for (let i = 1; i < adminLevels.length; i++) {
-    if (mymap.hasLayer(adminLevels[i].features)==false) { //check if layer is not activated
+    if (mymap.hasLayer(adminLevels[i].features) == false) { //check if layer is not activated
       console.log("Layer was NOT activated!");
       mymap.addLayer(adminLevels[i].features); //tick layer
       mymap.removeLayer(adminLevels[i].features); //untick layer
@@ -203,7 +206,7 @@ function showGeoJson(inputGeoJson) {
 function style() {
   //color = feature.properties.fill; 
   //console.log(color);
-  return {"fillColor": undefined, "opacity": 1, "fillOpacity": 0.7, "color": "#555555", "weight": 2};
+  return { "fillColor": undefined, "opacity": 1, "fillOpacity": 0.7, "color": "#555555", "weight": 2 };
 }
 
 //1. Assign each feature to a layer depending on its admin_level (NEW)
@@ -214,7 +217,7 @@ function onEachFeature(feature, layer) {
   //Output name and Wikidata ID at the bottom left part of the map on mouse over
   layer.on('mouseover', function (e) {
     //use english name, if available. Else use the normal "name" tag. Dot/bracket notation used due to colon (https://stackoverflow.com/q/4925760/5263954)
-    
+
     if (typeof feature.properties.tags['name:en'] == 'undefined') {
       var name = feature.properties.tags.name;
     } else {
@@ -243,16 +246,16 @@ function onEachFeature(feature, layer) {
     if (typeof layer.options.fillColor == "undefined") {
       //Case: No color defined for this district yet
       polygonColor = stdColors[whatsSelected()];
-      layer.setStyle({fillColor: polygonColor});
+      layer.setStyle({ fillColor: polygonColor });
       addToWikidataArray(feature.properties.tags.wikidata);
     } else if (layer.options.fillColor != stdColors[whatsSelected()]) {
       //Case: Current fill color is different than selected color
       updateWikidataArray(layer.options.fillColor, feature.properties.tags.wikidata);
       polygonColor = stdColors[whatsSelected()];
-      layer.setStyle({fillColor: polygonColor});
-    }  else {
+      layer.setStyle({ fillColor: polygonColor });
+    } else {
       //Case: Current fill color = Selected color
-      layer.setStyle({fillColor: undefined});
+      layer.setStyle({ fillColor: undefined });
       removeFromWikidataArray(feature.properties.tags.wikidata);
     }
 
@@ -264,17 +267,17 @@ function onEachFeature(feature, layer) {
   var admin_level = feature.properties.tags.admin_level; //subelement "tags" only for geojson from overpass api.
 
   switch (admin_level) {
-    case "1": adminLevels[admin_level].features.addLayer( layer ); break; //add polygon to adminLevels[0]
-    case "2": adminLevels[admin_level].features.addLayer( layer ); break;
-    case "3": adminLevels[admin_level].features.addLayer( layer ); break;
-    case "4": adminLevels[admin_level].features.addLayer( layer ); break;
-    case "5": adminLevels[admin_level].features.addLayer( layer ); break;
-    case "6": adminLevels[admin_level].features.addLayer( layer ); break;
-    case "7": adminLevels[admin_level].features.addLayer( layer ); break;
-    case "8": adminLevels[admin_level].features.addLayer( layer ); break;
-    case "9": adminLevels[admin_level].features.addLayer( layer ); break;
-    case "10": adminLevels[admin_level].features.addLayer( layer ); break;
-    case "11": adminLevels[admin_level].features.addLayer( layer ); break;
+    case "1": adminLevels[admin_level].features.addLayer(layer); break; //add polygon to adminLevels[0]
+    case "2": adminLevels[admin_level].features.addLayer(layer); break;
+    case "3": adminLevels[admin_level].features.addLayer(layer); break;
+    case "4": adminLevels[admin_level].features.addLayer(layer); break;
+    case "5": adminLevels[admin_level].features.addLayer(layer); break;
+    case "6": adminLevels[admin_level].features.addLayer(layer); break;
+    case "7": adminLevels[admin_level].features.addLayer(layer); break;
+    case "8": adminLevels[admin_level].features.addLayer(layer); break;
+    case "9": adminLevels[admin_level].features.addLayer(layer); break;
+    case "10": adminLevels[admin_level].features.addLayer(layer); break;
+    case "11": adminLevels[admin_level].features.addLayer(layer); break;
   }
 
   //Write all relation id's into an array
@@ -288,7 +291,7 @@ function onEachFeature(feature, layer) {
   //for GeoJSON's from overpass and osmtogeojson
   var osmId = feature.properties.id;
 
-  if (exclusionListArray.includes(osmId)==false) {
+  if (exclusionListArray.includes(osmId) == false) {
     exclusionListArray.push(osmId);
   }
   //console.log(exclusionListArray);
@@ -307,18 +310,18 @@ function filterPoints(layer) {
 
 //get the s,w,n,e cordinates of the current map section and write it to bbox variable
 function getBboxCoordinates() {
-console.log("Current zoom level: " +mymap.getZoom());
-var bounds = mymap.getBounds();
-var bbox = bounds.getSouthWest().lat + ',' +
-            bounds.getSouthWest().wrap().lng + ',' +
-            bounds.getNorthEast().lat + ',' +
-            bounds.getNorthEast().wrap().lng;
-console.log("bbox: " +bbox);
-return bbox;
+  console.log("Current zoom level: " + mymap.getZoom());
+  var bounds = mymap.getBounds();
+  var bbox = bounds.getSouthWest().lat + ',' +
+    bounds.getSouthWest().wrap().lng + ',' +
+    bounds.getNorthEast().lat + ',' +
+    bounds.getNorthEast().wrap().lng;
+  console.log("bbox: " + bbox);
+  return bbox;
 }
 
 //Check current zoom level of map and show info message, if zoom level < 7
-mymap.on('zoom', function(e) { // e is an event object (MouseEvent in this case)
+mymap.on('zoom', function (e) { // e is an event object (MouseEvent in this case)
   var currentZoomLevel = mymap.getZoom();
   // var map = document.getElementById("map");
   var infoText = document.getElementById("zoom-in");
@@ -342,10 +345,10 @@ function greyOut() {
   var button = document.getElementById("load-button");
   button.classList.toggle("grey-blur");
   //make sure that button cannot be clicked anymore
-  if (button.disabled==false) {
-    button.disabled=true;
+  if (button.disabled == false) {
+    button.disabled = true;
   } else {
-    button.disabled=false;
+    button.disabled = false;
   }
   //show/hide loading animation
   var animation = document.getElementById("loading-animation");
@@ -362,10 +365,10 @@ function removeColor(ids) {
   //For each layer (i.e. polygon) the code below is executed.
   jsonLayer.eachLayer(function (layer) {
     //console.log(layer.feature.properties.tags.wikidata);
-    for (var i=0; i<ids.length; i++) {
-      if(layer.feature.properties.tags.wikidata == ids[i]) {
+    for (var i = 0; i < ids.length; i++) {
+      if (layer.feature.properties.tags.wikidata == ids[i]) {
         //console.log(ids[i]);
-        layer.setStyle({fillColor: undefined})
+        layer.setStyle({ fillColor: undefined })
       }
     }
   });
@@ -374,11 +377,11 @@ function removeColor(ids) {
 //Color all districts polygons below the deleted one with a color 1 number above the current one (e.g. instead of std color 4 change to 3)
 function oneColorUp(startAt) {
   jsonLayer.eachLayer(function (layer) {
-    for (i=startAt; i<wikidataIds.length; i++) {
+    for (i = startAt; i < wikidataIds.length; i++) {
       if (wikidataIds[i].length != 0) {
-        for (j=0; j<wikidataIds[i].length; j++) {
-          if(layer.feature.properties.tags.wikidata == wikidataIds[i][j]) {
-            layer.setStyle({fillColor: stdColors[i]})
+        for (j = 0; j < wikidataIds[i].length; j++) {
+          if (layer.feature.properties.tags.wikidata == wikidataIds[i][j]) {
+            layer.setStyle({ fillColor: stdColors[i] })
           }
         }
       }
@@ -395,7 +398,7 @@ function addDistrict() {
   }
   itemCounter++;
   //console.log(itemCounter);
-  var item = '<div id="item_'+itemCounter+'" class="item"><div class=checkmark><input type="radio" name="selected" checked="checked" title="Activate district to add/remove polygons"></div><div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District '+itemCounter+'" title="Enter name of district" onfocus="selectCheckmarkAndName(this)" oninput="createOutput()"></div><div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete" title="Click to delete district"></div></div>';
+  var item = '<div id="item_' + itemCounter + '" class="item"><div class=checkmark><input type="radio" name="selected" checked="checked" title="Activate district to add/remove polygons"></div><div class=title><input type="text" class="dname" placeholder="Please enter district name" value="District ' + itemCounter + '" title="Enter name of district" onfocus="selectCheckmarkAndName(this)" oninput="createOutput()"></div><div class=delete onclick="removeDistrict(this)"><img src="img/Octagon_delete.svg" alt="Delete" title="Click to delete district"></div></div>';
   var content = document.getElementById('add-district');
   content.insertAdjacentHTML('beforebegin', item);
 
@@ -428,7 +431,7 @@ function removeDistrict(dustbin) {
   //If there is only one region item left
   if (itemCounter < 1) {
     removeColor(wikidataIds[0]);
-    wikidataIds.splice(0,1); //remove 1st subarray (i.e. region/district)
+    wikidataIds.splice(0, 1); //remove 1st subarray (i.e. region/district)
     wikidataIds.push([]); //add an empty 11th subarray to wikidataIDs
     createOutput(); //update output field
     return;
@@ -438,7 +441,7 @@ function removeDistrict(dustbin) {
   //Find out at which position "itemToDelete" is in order to know the array number of which to remove the subarray entries.
   var items = document.getElementsByClassName("item");
   var checkmarks = document.getElementsByClassName("checkmark");
-  for (i=0;i<items.length;i++) {
+  for (i = 0; i < items.length; i++) {
     //console.log(items[i]);
     if (items[i] == itemToDelete) {
       //console.log(i);
@@ -450,14 +453,14 @@ function removeDistrict(dustbin) {
       if (checkmarks[i].childNodes[0].checked) {
         //Deleted item had checkmark!
         //console.log("Checkmark was on!");
-        if (i!=0) { //if deleted item was not the first one:
+        if (i != 0) { //if deleted item was not the first one:
           checkmarks[0].childNodes[0].checked = true; //check the first item
         } else {
           checkmarks[1].childNodes[0].checked = true; //else check the second item. Will move to 1st position after remove() method below
         }
       }
 
-      wikidataIds.splice(i,1); //remove subarray (i.e. region/district)
+      wikidataIds.splice(i, 1); //remove subarray (i.e. region/district)
       wikidataIds.push([]); //add an empty 11th subarray to wikidataIDs
       oneColorUp(i); //Color all districts below the deleted one with the next higher color (e.g. from StdColor 4 to 3).
       console.log(wikidataIds);
@@ -471,8 +474,8 @@ function removeDistrict(dustbin) {
 
   //change counter on id's, so they are consecutively numbered
   var allItems = document.getElementsByClassName("item");
-  for (var i=0; i<allItems.length; i++) {
-    allItems[i].setAttribute("id","item_" + (i));
+  for (var i = 0; i < allItems.length; i++) {
+    allItems[i].setAttribute("id", "item_" + (i));
   }
 
   createOutput();
@@ -511,7 +514,7 @@ function updateWikidataArray(previousColor, wikidataId) {
   var j = wikidataIds[i].indexOf(wikidataId);
   //console.log("The Wikidata ID to be removed is at subarray position: " +j);
   //Remove the Wikidata ID from subarray
-  wikidataIds[i].splice(j,1); //at position j remove 1 item
+  wikidataIds[i].splice(j, 1); //at position j remove 1 item
   //Add the Wikidata ID to the newly selected district
   wikidataIds[selected].push(wikidataId);
   console.log(wikidataIds);
@@ -525,7 +528,7 @@ function removeFromWikidataArray(wikidataId) {
   //Find the Wikdata ID in the subarray
   var j = wikidataIds[selected].indexOf(wikidataId);
   //Remove the Wikidata ID from subarray
-  wikidataIds[selected].splice(j,1);
+  wikidataIds[selected].splice(j, 1);
   //console.log(wikidataIds);
   createOutput();
 }
@@ -533,7 +536,7 @@ function removeFromWikidataArray(wikidataId) {
 //Create/update output text for Wikivoyage (i.e. Mapframe and Mapshapes)
 function createOutput() {
   //Create mapshapes
-  var mapshape="{{Mapframe|width=500|height=500|group=map1}}\r\n";
+  var mapshape = "{{Mapframe|width=500|height=500|group=map1}}\r\n";
   var titles = document.getElementsByClassName("dname");
   //console.log(titles);
   //console.log(wikidataIds.length)
@@ -542,9 +545,9 @@ function createOutput() {
   var title;
 
   for (var i = 0; i < wikidataIds.length; i++) {
-    if (wikidataIds[i].length !=0) {
-      wikidataId=wikidataIds[i];
-      fill = "{{StdColor|T"+(i+1)+"}}"; //Use StdColor syntax of Wikivoyage
+    if (wikidataIds[i].length != 0) {
+      wikidataId = wikidataIds[i];
+      fill = "{{StdColor|T" + (i + 1) + "}}"; //Use StdColor syntax of Wikivoyage
       //fill = stdColors[i];
       title = titles[i].value;
 
@@ -554,14 +557,14 @@ function createOutput() {
   //Only output the Wikivoyage code, if there are Wikidata elements in array "wikidataIds"
   var empty = true;
   for (var i = 0; i < wikidataIds.length; i++) {
-    if (wikidataIds[i].length !=0) {
-      empty=false;
+    if (wikidataIds[i].length != 0) {
+      empty = false;
       break;
     }
   }
 
   if (empty) {
-    document.getElementById("textareabox").innerHTML="";
+    document.getElementById("textareabox").innerHTML = "";
   } else {
     document.getElementById("textareabox").innerHTML = mapshape;
   }
@@ -570,7 +573,7 @@ function createOutput() {
 //Scroll down to help when clicking on "Help"
 function scrollDown() {
   var helpBegin = document.getElementById("help-begin");
-  setTimeout(function(){ helpBegin.scrollIntoView(); }, 10); //Without delay scrollIntoView does not work.
+  setTimeout(function () { helpBegin.scrollIntoView(); }, 10); //Without delay scrollIntoView does not work.
 }
 
 //When clicking in name input field select the whole text and check the district/region
@@ -580,4 +583,33 @@ function selectCheckmarkAndName(element) {
   checkbox.checked = true;
   //Select all text in text field
   element.setSelectionRange(0, element.value.length)
+}
+
+//Code to load the external navbar.html
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /* Loop through a collection of all HTML elements: */
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /* Make an HTTP request using the attribute value as the file name: */
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4) {
+          if (this.status == 200) { elmnt.innerHTML = this.responseText; }
+          if (this.status == 404) { elmnt.innerHTML = "Page not found."; }
+          /* Remove the attribute, and call this function once more: */
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /* Exit the function: */
+      return;
+    }
+  }
 }

@@ -1,0 +1,178 @@
+<style>
+
+  /* #region CSS RELATED TO NAVIGATION MENU */
+
+  /* header */
+  .header {
+    background-color: #fff;
+    box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, .1);
+    display: inline-block;
+    width: 100%;
+    z-index: 3;
+  }
+
+  .header ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+    background-color: #fff;
+  }
+
+  .header li a {
+    display: block;
+    padding: 20px 20px;
+    border-right: 1px solid #f4f4f4;
+    text-decoration: none;
+    color: #000;
+  }
+
+  /* Change background color of app selector links on hover, except for the currently active app */
+  .header li a:hover:not(.selected) {
+    background-color: #d0ddd2;
+  }
+
+  .selected {
+    background-color: darkgray;
+    color: white;
+    cursor: auto;
+  }
+
+  .header .logo {
+    float: left;
+    font-size: 2em;
+    padding-bottom: 0px;
+    padding-top: 15px;
+    padding-left: 10px;
+    text-decoration: none;
+  }
+
+  /* menu */
+  .header .menu {
+    clear: both;
+    max-height: 0;
+    transition: max-height .2s ease-out;
+  }
+
+  /* menu icon */
+
+  .header .menu-icon {
+    cursor: pointer;
+    /* display: inline-block; */
+    float: right;
+    padding: 28px 20px;
+    position: relative;
+    user-select: none;
+  }
+
+  /*Center line of the hamburger*/
+  .header .menu-icon .navicon {
+    background: #333;
+    display: block;
+    height: 2px;
+    position: relative;
+    transition: background .2s ease-out;
+    width: 18px;
+  }
+
+  /*After: Upper line, Before: Lower line of the hamburger*/
+  .header .menu-icon .navicon:before,
+  .header .menu-icon .navicon:after {
+    background: #333;
+    content: '';
+    display: block;
+    height: 100%;
+    position: absolute;
+    transition: all .2s ease-out;
+    width: 100%;
+  }
+
+  .header .menu-icon .navicon:before {
+    top: 5px;
+  }
+
+  .header .menu-icon .navicon:after {
+    top: -5px;
+  }
+
+  /* menu btn */
+  .header .menu-btn {
+    display: none;
+  }
+
+  .header .menu-btn:checked~.menu {
+    max-height: fit-content;
+  }
+
+  .header .menu-btn:checked~.menu-icon .navicon {
+    background: transparent;
+  }
+
+  .header .menu-btn:checked~.menu-icon .navicon:before {
+    transform: rotate(-45deg);
+  }
+
+  .header .menu-btn:checked~.menu-icon .navicon:after {
+    transform: rotate(45deg);
+  }
+
+  .header .menu-btn:checked~.menu-icon .navicon:before,
+  .header .menu-btn:checked~.menu-icon .navicon:after {
+    top: 0;
+  }
+
+  @media (max-width: 600px) {
+    .header li select {
+      padding: 20px 30px 20px 20px;
+      background-position-x: 96%;
+    }
+  }
+
+  .header li select:hover {
+    background-color: #f4f4f4;
+    cursor: pointer;
+  }
+
+  @media (min-width: 600px) {
+    .header li {
+      float: left;
+    }
+
+    .header li a {
+      padding: 20px 25px;
+    }
+
+    .header .menu {
+      clear: none;
+      float: right;
+      max-height: none;
+    }
+
+    .header .menu-icon {
+      display: none;
+    }
+  }
+
+  .app-logo {
+    /* fill:grey; */
+    width: 30px;
+    height: 30px;
+  }
+
+  /* #endregion */
+</style>
+
+<header class="header">
+  <a href="https://www.wikivoyage.org/" class="logo" title="Wikivoyage Homepage"><svg class="app-logo">
+      <use xlink:href="img/icons.svg#wikivoyage-logo"></use>
+    </svg></a>
+  <input class="menu-btn" type="checkbox" id="menu-btn" />
+  <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+  <ul class="menu">
+    <li><a id="wv-districtifier-link" class="selected" href="https://rene78.github.io/Wikivoyage-Districtifier/"
+        title="Create district overview maps">Wikivoyage Districtifier</a>
+    </li>
+    <li><a id="mapmask-geojson-converter-link" href="https://rene78.github.io/mapmask-geojson-converter/" title="Convert Mapmask to GeoJSON or vice versa">Mapmask ↔ GeoJSON Converter</a></li>
+    <li><a id="wikidata-extractor-link" href="https://rene78.github.io/Wikidata-Extractor/" title="Create maps, where the Wikidata ID of a certain region can be gathered">Wikidata-Extractor</a></li>
+  </ul>
+</header>

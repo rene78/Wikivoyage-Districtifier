@@ -5,32 +5,9 @@ html {
 
 body {
   background-color: linen;
-}
-
-/*Navigation menu*/
-ul.topnav {
-  list-style-type: none;
   margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
+  font-family: Arial, Helvetica, sans-serif;
 }
-
-ul.topnav li {float: left;}
-
-ul.topnav li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
-ul.topnav li a:hover:not(.active) {background-color: #111;}
-
-ul.topnav li a.active {background-color: #4CAF50;}
-
-ul.topnav li.right {float: right;}
 
 #map-container {
   position: relative;
@@ -59,8 +36,8 @@ ul.topnav li.right {float: right;}
 
 @media (max-width: 600px){
   #map-container {height: 600px;}
-  ul.topnav li.right,
-  ul.topnav li {float: none;}
+  /* ul.topnav li.right,
+  ul.topnav li {float: none;} */
   h1 {text-align: center;}
 }
 
@@ -102,8 +79,6 @@ ul.topnav li.right {float: right;}
   position: absolute;
   left: calc(50% - 46px);
   top: 40%;
-  /* z-index: 1; */
-
   border: 16px solid #f3f3f3;
   border-radius: 50%;
   border-top: 16px solid #3498db;
@@ -147,10 +122,6 @@ ul.topnav li.right {float: right;}
   grid-template-areas:
     "checkmark title delete";
 }
-
-/* #content > * {
-  padding: 5px;
-} */
 
 .checkmark {
   position: relative;
@@ -240,13 +211,17 @@ textarea {
   background-color: #69999f;
 }
 
+summary {
+  cursor: pointer;
+}
+
 img {
   height: 40px;
   width: auto;
 }
 
 #how-to-image {
-  width:100%;
+  width:98%;
   max-width:1600px;
   height:auto;
   border: 3px solid red;
@@ -262,12 +237,4 @@ iframe {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-/*Style the query code for overpass turbo*/
-code {
-  background-color: #eee;
-  border: 1px solid #999;
-  display: block;
-  padding: 10px;
 }
