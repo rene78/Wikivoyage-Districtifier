@@ -62,6 +62,8 @@ body {
   display: inline-block;
   font-size: 16px;
   cursor: pointer;
+  box-shadow: 2px 5px 4px #888888;
+  border-radius: 8px;
 }
 
 #load-button:hover {
