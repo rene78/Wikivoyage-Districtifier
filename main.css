@@ -64,6 +64,10 @@ body {
   cursor: pointer;
 }
 
+#load-button:hover {
+  opacity: 1;
+}
+
 #region-info {
   position: absolute;
   left: 0px;
