@@ -217,6 +217,10 @@ textarea {
   background-color: #69999f;
 }
 
+details {
+  margin: 5px;
+}
+
 summary {
   cursor: pointer;
 }
