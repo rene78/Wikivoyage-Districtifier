@@ -70,6 +70,13 @@ body {
   opacity: 1;
 }
 
+#load-button:disabled {
+  background: #999;
+  color: #555;
+  cursor: not-allowed;
+  opacity: .7; /*overwrite opacity change on hover*/
+}
+
 #region-info {
   position: absolute;
   left: 0px;

@@ -323,16 +323,19 @@ function getBboxCoordinates() {
 //Check current zoom level of map and show info message, if zoom level < 7
 mymap.on('zoom', function (e) { // e is an event object (MouseEvent in this case)
   var currentZoomLevel = mymap.getZoom();
+  const button = document.getElementById('load-button');
   // var map = document.getElementById("map");
   var infoText = document.getElementById("zoom-in");
   if (currentZoomLevel < 7) {
     // console.log("Zoom level below 7");
     // map.classList.add("faded");
     infoText.classList.remove("hide");
+    button.disabled = "disabled";
   } else {
     // console.log("Zoom level >= 7");
     // map.classList.remove("faded");
     infoText.classList.add("hide");
+    button.disabled = "";
   }
 });
 
