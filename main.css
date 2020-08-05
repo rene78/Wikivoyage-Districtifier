@@ -173,7 +173,7 @@ body {
 }
 
 textarea {
-  height: 87px;
+  height: 100px;
   width: calc(100% - 5px);
   padding: 2px;
   border: none;
