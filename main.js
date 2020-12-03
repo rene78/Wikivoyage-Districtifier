@@ -60,7 +60,8 @@ function addLeafletMap() {
   mymap = L.map('map', {
     center: [0, 0],
     zoom: 1,
-    layers: [CartoDB_Voyager, OpenStreetMap_Mapnik]
+    layers: [CartoDB_Voyager, OpenStreetMap_Mapnik],
+    gestureHandling: true
   });
 
   // Define base map layer control elements on top right of map
