@@ -589,6 +589,17 @@ function selectCheckmarkAndName(element) {
   element.setSelectionRange(0, element.value.length)
 }
 
+//Copy text in text area to clipboard
+function copyText() {
+  const copyText = document.querySelector("#textareabox");
+  copyText.select();
+  document.execCommand("copy");
+  document.getSelection().removeAllRanges();//deselect text in text field again
+  const tooltiptext = document.querySelector(".tooltiptext");
+  tooltiptext.innerText = "Copied!";
+  setTimeout(() => { tooltiptext.innerText = "Copy to clipboard"; }, 3000);//change tooltip text back to default
+}
+
 //Code to load the external navbar.html
 function includeHTML() {
   var z, i, elmnt, file, xhttp;
