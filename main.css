@@ -301,6 +301,6 @@ iframe {
   border-color: transparent transparent transparent #555;
 }
 
-.copy-button:hover .tooltiptext {
+#graphic:hover ~ .tooltiptext {
   opacity: 1;
 }
