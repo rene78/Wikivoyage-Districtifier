@@ -242,6 +242,28 @@ img {
   width: auto;
 }
 
+.dustbin {
+  fill: white;
+  width: 40px;
+  height: 40px;
+}
+
+.delete:hover .dustbin {
+  fill: red;
+}
+
+.add-district-button {
+  width: 40px;
+  height: 40px;
+  /* fill: green; */
+  opacity: .7;
+  fill: #4CAF50;
+}
+
+#add-district:hover .add-district-button{
+  opacity: 1;
+}
+
 #how-to-image {
   width:98%;
   max-width:1600px;
