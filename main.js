@@ -228,6 +228,13 @@ function onEachFeature(feature, layer) {
     //console.log(e);
     document.getElementById("region-info").innerText = name + ", Wikidata-ID: " + wd;
     //console.log(name + ", Wikidata-ID: " + wd);
+    //Change opacity to 0.9 when polygon gets focus
+    layer.setStyle({ fillOpacity: 0.9 });
+  });
+
+  //Change opacity back to 0.7 when polygon loses focus
+  layer.on('mouseout', function (e) {
+    layer.setStyle({ fillOpacity: 0.7 });
   });
 
   //bind click
