@@ -234,7 +234,14 @@ details {
 }
 
 summary {
+  padding: 4px;
+  background-color: #dad1c9;
+  border: none;
   cursor: pointer;
+}
+
+summary:hover {
+  background-color: #b1a8a8;
 }
 
 img {
