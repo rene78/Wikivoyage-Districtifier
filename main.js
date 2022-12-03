@@ -61,9 +61,14 @@ function addLeafletMap() {
     center: [0, 0],
     zoom: 1,
     layers: [CartoDB_Voyager, OpenStreetMap_Mapnik],
-    gestureHandling: true
+    gestureHandling: activateGestureHandling()
   });
 
+  //Activate gesture handling only on small screens ("use two fingers to pan and zoom map")
+  function activateGestureHandling() {
+    if (screen.width < 601) return true;
+    else return false;
+  }
   // Define base map layer control elements on top right of map
   basemapControl = {
     "English Names": CartoDB_Voyager,
@@ -83,6 +88,14 @@ function addLeafletMap() {
   adminLevels[10].features = L.layerGroup().addTo(mymap);
   adminLevels[11].features = L.layerGroup().addTo(mymap);
 }
+
+//If screen width changes during use of app (e.g. turning phone from portrait to landscape)
+//--> Activate gesture handling if screen width is < 601px
+window.addEventListener("resize", () => {
+  // console.log(screen.width);
+  if (screen.width < 601) mymap.gestureHandling.enable();
+  else mymap.gestureHandling.disable();
+});
 
 //download GeoJSON via overpass API and forward it to showGeoJson function
 function fetchExternalGeojson() {
