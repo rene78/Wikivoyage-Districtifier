@@ -7,6 +7,9 @@ body {
   background-color: linen;
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
+  display: grid;
+  min-height: 100vh;
+  grid-template-rows: auto 1fr auto;
 }
 
 #map-container {
@@ -21,7 +24,6 @@ body {
 @media (min-width: 600px){
   #content {
     display: grid;
-    height: 87vh;
     grid-template-columns: 3fr 1fr;
     grid-template-rows: repeat(12, 1fr);
     grid-gap: 2px;
@@ -231,7 +233,7 @@ textarea {
 }
 
 details {
-  margin: 5px;
+  margin: 5px 5px 0 5px; 
 }
 
 summary {
